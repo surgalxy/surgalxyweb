@@ -20,18 +20,16 @@ const TrackInfo = styled.span`
   flex-grow: 1;
 `;
 
-
-
-
 const AudioPlayer = ({ track }) => {
   const [isPlaying, setIsPlaying] = useState(false);
-  const audioRef = useRef(new Audio(track.audio));
+  const audioRef = useRef(null);
 
   useEffect(() => {
-    console.log("Audio source:", track.audio);
-    audioRef.current.addEventListener('error', (e) => {
-      console.error("Audio error:", e);
-    });
+    if (audioRef.current) {
+      audioRef.current.addEventListener('error', (e) => {
+        console.error("Audio error:", e);
+      });
+    }
   }, [track.audio]);
 
   const togglePlay = () => {
@@ -51,6 +49,7 @@ const AudioPlayer = ({ track }) => {
       <TrackInfo>
         {track.title} - {track.duration}
       </TrackInfo>
+      <audio ref={audioRef} src={track.audio} />
     </PlayerContainer>
   );
 };

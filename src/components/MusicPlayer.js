@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import styled from 'styled-components';
 
 const PlayerContainer = styled.div`
@@ -38,13 +38,38 @@ const ProgressBar = styled.input`
 const MusicPlayer = ({ song }) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
-  const audioRef = useRef(new Audio(song.url));
+  const audioRef = useRef(null);
+
+  useEffect(() => {
+    const audio = new Audio(song.url);
+    audioRef.current = audio;
+
+    const handleTimeUpdate = () => {
+      const currentProgress = (audio.currentTime / audio.duration) * 100;
+      setProgress(currentProgress);
+    };
+
+    const handleEnded = () => {
+      setIsPlaying(false);
+      setProgress(0);
+    };
+
+    audio.addEventListener('timeupdate', handleTimeUpdate);
+    audio.addEventListener('ended', handleEnded);
+
+    return () => {
+      audio.removeEventListener('timeupdate', handleTimeUpdate);
+      audio.removeEventListener('ended', handleEnded);
+      audio.pause();
+      audio.src = ''; // Clean up the audio source to prevent memory leaks
+    };
+  }, [song.url]);
 
   const togglePlay = () => {
     if (isPlaying) {
       audioRef.current.pause();
     } else {
-      audioRef.current.play();
+      audioRef.current.play().catch(e => console.error("Playback failed:", e));
     }
     setIsPlaying(!isPlaying);
   };

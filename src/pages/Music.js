@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import AudioPlayer from '../components/AudioPlayer';
+import MusicPlayer from '../components/MusicPlayer';
 import PageTransition from '../components/PageTransition';
 
 const MusicContainer = styled.div`
@@ -94,17 +94,15 @@ const albums = [
     releaseYear: 2024,
     genre: 'House',
     tracks: [
-      { title: 'We Are the Light', duration: '2:45', audio: '/assets/audio/we-are-the-light.wav' },
-      { title: 'Electronic Dreams', duration: '4:00', audio: '/assets/audio/electronic-dreams.mp3' },
-      { title: 'Lost In the Beat', duration: '3:59', audio: '/assets/audio/lost-in-the-beat.mp3' },
-      { title: 'Euphoric Nights', duration: '1:53', audio: '/assets/audio/euphoric-nights.mp3' },
-      { title: 'Dream Flight', duration: '2:29', audio: '/assets/audio/dream-flight.mp3' },
-      { title: 'Lost In the Night', duration: '1:55', audio: '/assets/audio/lost-in-the-night.mp3' }
+      { title: 'We Are the Light', duration: '2:45', url: '/assets/audio/we-are-the-light.mp3' },
+      { title: 'Electronic Dreams', duration: '4:00', url: '/assets/audio/electronic-dreams.mp3' },
+      { title: 'Lost In the Beat', duration: '3:59', url: '/assets/audio/lost-in-the-beat.mp3' },
+      { title: 'Euphoric Nights', duration: '1:53', url: '/assets/audio/euphoric-nights.mp3' },
+      { title: 'Dream Flight', duration: '2:29', url: '/assets/audio/dream-flight.mp3' },
+      { title: 'Lost In the Night', duration: '1:55', url: '/assets/audio/lost-in-the-night.mp3' }
     ]
   }
 ];
-
-
 
 const Music = () => {
   return (
@@ -121,7 +119,7 @@ const Music = () => {
               <TrackList>
                 {album.tracks.map((track, index) => (
                   <TrackItem key={index}>
-                    <AudioPlayer track={track} />
+                    <MusicPlayer song={track} />
                   </TrackItem>
                 ))}
               </TrackList>
@@ -134,4 +132,3 @@ const Music = () => {
 };
 
 export default Music;
- 
