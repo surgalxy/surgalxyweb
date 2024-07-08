@@ -1,45 +1,97 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="utf-8" />
     <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#000000" />
-    <meta
-      name="surgalxy"
-      content="Web site created using create-react-app"
-    />
-     <link rel="icon" type="image/png" href="images/galaxy_icon.png">
-    <!--
-      manifest.json provides metadata used when your web app is installed on a
-      user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
-    -->
+    <meta name="surgalxy" content="Web site created using create-react-app" />
+    <link rel="icon" type="image/png" href="images/galaxy_icon.png">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <!-- Manifest for PWA -->
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
-    <!--
-      Notice the use of %PUBLIC_URL% in the tags above.
-      It will be replaced with the URL of the `public` folder during the build.
-      Only files inside the `public` folder can be referenced from the HTML.
-
-      Unlike "/favicon.ico" or "favicon.ico", "%PUBLIC_URL%/favicon.ico" will
-      work correctly both with client-side routing and a non-root public URL.
-      Learn how to configure a non-root public URL by running `npm run build`.
-    -->
     <title>surgalxy</title>
-  </head>
-  <body>
+    <!-- Internal CSS for simplicity -->
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            font-size: 16px;
+            line-height: 1.6;
+            color: #ffffff;
+            background-color: #000000;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Orbitron', sans-serif;
+            color: #ffcc00;
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        h2 {
+            font-size: 2.5rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .button {
+            font-family: 'Orbitron', sans-serif;
+            background-color: #ffcc00;
+            color: #000;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-transform: uppercase;
+        }
+
+        .button:hover {
+            background-color: #ffaa00;
+        }
+
+        header, footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #111;
+        }
+
+        main {
+            padding: 20px;
+        }
+
+        section {
+            margin-bottom: 20px;
+        }
+
+        p, ul {
+            margin: 0 0 1rem 0;
+        }
+    </style>
+</head>
+<body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
-    <div id="root"></div>
-    <!--
-      This HTML file is a template.
-      If you open it directly in the browser, you will see an empty page.
-
-      You can add webfonts, meta tags, or analytics to this file.
-      The build step will place the bundled scripts into the <body> tag.
-
-      To begin the development, run `npm start` or `yarn start`.
-      To create a production bundle, use `npm run build` or `yarn build`.
-    -->
-  </body>
+    <div id="root">
+        <header>
+            <h1>Welcome to Surgalxy</h1>
+            <h2>Exploring House Music and the Cosmos</h2>
+        </header>
+        <main>
+            <section>
+                <h3>Discover Alternate Realities</h3>
+                <p>Join us on a journey through space and sound. Our house music blends cosmic themes with alternate realities, creating an experience like no other.</p>
+            </section>
+            <section>
+                <button class="button">Join Us</button>
+            </section>
+        </main>
+        <footer>
+            <p>&copy; 2024 Surgalxy. All rights reserved.</p>
+        </footer>
+    </div>
+</body>
 </html>
-
-
