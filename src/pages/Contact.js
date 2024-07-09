@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import styled, { keyframes } from 'styled-components';
 import PageTransition from '../components/PageTransition';
+import emailjs from 'emailjs-com';
 
 const floatingAnimation = keyframes`
   0% { transform: translateY(0px); }
@@ -103,6 +104,21 @@ const FloatingAstronaut = styled.img`
   bottom: -50px;
 `;
 
+const SocialMediaLinks = styled.div`
+  text-align: center;
+  margin-top: 30px;
+`;
+
+const SocialLink = styled.a`
+  margin: 0 10px;
+  color: white;
+  text-decoration: none;
+  font-size: 1.5rem;
+  &:hover {
+    color: #ffd700;
+  }
+`;
+
 const Contact = () => {
   const [formData, setFormData] = useState({
     name: '',
@@ -116,8 +132,14 @@ const Contact = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Here you would typically send the form data to a server
-    console.log('Form submitted:', formData);
+    emailjs.sendForm('surgalxywebservice', 'template_sjur4zg', e.target, 'R0oUn5ViLJH7z6_B2')
+      .then((result) => {
+          console.log(result.text);
+          alert('Message sent successfully!');
+      }, (error) => {
+          console.log(error.text);
+          alert('An error occurred, please try again.');
+      });
     // Reset form after submission
     setFormData({ name: '', email: '', message: '' });
   };
@@ -156,6 +178,11 @@ const Contact = () => {
           </Form>
           <FloatingAstronaut src="/assets/images/astronaut.png" alt="Floating Astronaut" />
         </FormContainer>
+        <SocialMediaLinks>
+			<SocialLink href="https://tiktok.com/@surgalxy" target="_blank">Facebook</SocialLink>
+			<SocialLink href="https://twitter.com/surgalxy" target="_blank">Twitter</SocialLink>
+          <SocialLink href="https://instagram.com/surgalxy" target="_blank">LinkedIn</SocialLink>
+        </SocialMediaLinks>
       </ContactContainer>
     </PageTransition>
   );
