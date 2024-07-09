@@ -88,3 +88,19 @@ section {
 p, ul {
     margin: 0 0 1rem 0;
 }
+
+/* Social Media Links */
+footer div {
+    margin-top: 20px;
+}
+
+footer a {
+    margin: 0 10px;
+    color: #ffcc00;
+    text-decoration: none;
+    font-family: 'Orbitron', sans-serif;
+}
+
+footer a:hover {
+    color: #ffaa00;
+}

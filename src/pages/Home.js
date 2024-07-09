@@ -41,9 +41,9 @@ const Home = () => {
     <PageTransition>
       <HomeContainer>
         <VideoBackground autoPlay loop muted>
-          <source src="/assets/videos/space_journey.mp4" type="video/mp4" />
+          <source src={`${process.env.PUBLIC_URL}/assets/videos/space_journey.mp4`} type="video/mp4" />
         </VideoBackground>
-        <Logo src="/assets/images/surgalxy_logo.png" alt="Surgalaxy" />
+        <Logo src={`${process.env.PUBLIC_URL}/assets/images/surgalxy_logo.png`} alt="Surgalaxy" />
         <Subtitle>Embark on a cosmic journey through sound and space</Subtitle>
       </HomeContainer>
     </PageTransition>

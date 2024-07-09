@@ -179,9 +179,9 @@ const Contact = () => {
           <FloatingAstronaut src="/assets/images/astronaut.png" alt="Floating Astronaut" />
         </FormContainer>
         <SocialMediaLinks>
-			<SocialLink href="https://tiktok.com/@surgalxy" target="_blank">Facebook</SocialLink>
+			<SocialLink href="https://tiktok.com/@surgalxy" target="_blank">TikTok</SocialLink>
 			<SocialLink href="https://twitter.com/surgalxy" target="_blank">Twitter</SocialLink>
-          <SocialLink href="https://instagram.com/surgalxy" target="_blank">LinkedIn</SocialLink>
+          <SocialLink href="https://instagram.com/surgalxy" target="_blank">Instagram</SocialLink>
         </SocialMediaLinks>
       </ContactContainer>
     </PageTransition>
