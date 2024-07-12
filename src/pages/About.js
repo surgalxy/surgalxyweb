@@ -73,19 +73,19 @@ const About = () => {
           <Title>About surgalxy</Title>
           <ArtistImage src="/assets/images/artist_IMAGE.png" alt="surgalxy" />
           <Paragraph>
-					Exploring the cosmos with generative ai. For me music is the answer. It's what makes life worth living
+					Exploring the cosmos with generative ai. For me music is the answer, it's what makes life worth living.
           </Paragraph>
           <Paragraph>
-					Humilty is also an answer as we chart unknown territories and grow as individuals and as a collective
+					Humilty is also an answer as we chart unknown territories and grow as individuals and as a collective.
           </Paragraph>
           <Paragraph>
-					surgalxy is the expression of i have consumed and influenced by the many great mind of the world past and present
+					surgalxy is the expression of everything I have joyfully consumed and influenced by the many great minds of the world past and present.
           </Paragraph>
           <Paragraph>
-            To me the possibilities are infinite and I hope we all get the chance to explore those possibilities
+            To me the possibilities are infinite and I hope we all get the chance to explore those possibilities.
           </Paragraph>
           <Paragraph>
-			Lets look after eachother and this planet. Lets thrive together
+			Lets look after eachother and this planet. Lets thrive together!
 			</Paragraph>
           <Paragraph>
 		  Much love to all, sur

@@ -39,10 +39,20 @@ const NavLinks = styled.ul`
   list-style-type: none;
   margin: 0;
   padding: 0;
+  flex-direction: row;
+
+  @media only screen and (max-width: 600px) {
+    flex-direction: column;
+  }
 `;
 
 const NavItem = styled.li`
   margin-left: 2rem;
+
+  @media only screen and (max-width: 600px) {
+    margin-left: 0;
+    margin-bottom: 10px;
+  }
 `;
 
 const NavLink = styled(Link)`
@@ -71,8 +81,31 @@ const NavLink = styled(Link)`
   }
 `;
 
+const Hamburger = styled.div`
+  display: none;
+  flex-direction: column;
+  cursor: pointer;
+
+  span {
+    height: 2px;
+    width: 25px;
+    background: #fff;
+    margin-bottom: 4px;
+    border-radius: 5px;
+  }
+
+  @media only screen and (max-width: 600px) {
+    display: flex;
+  }
+`;
+
+const MobileNavLinks = styled(NavLinks)`
+  display: ${({ open }) => (open ? 'flex' : 'none')};
+`;
+
 const Navigation = () => {
   const [scrolled, setScrolled] = useState(false);
+  const [open, setOpen] = useState(false);
   const location = useLocation();
 
   useEffect(() => {
@@ -94,23 +127,28 @@ const Navigation = () => {
     <NavContainer style={{ background: scrolled ? 'rgba(26, 11, 46, 0.95)' : 'rgba(26, 11, 46, 0.8)' }}>
       <NavContent>
         <Logo to="/">surgalxy</Logo>
-        <NavLinks>
-          <NavItem>
+        <Hamburger className="hamburger" onClick={() => setOpen(!open)}>
+          <span />
+          <span />
+          <span />
+        </Hamburger>
+        <MobileNavLinks className="nav-links" open={open}>
+          <NavItem className="nav-item">
             <NavLink to="/" className={location.pathname === '/' ? 'active' : ''}>Home</NavLink>
           </NavItem>
-          <NavItem>
+          <NavItem className="nav-item">
             <NavLink to="/music" className={location.pathname === '/music' ? 'active' : ''}>Music</NavLink>
           </NavItem>
-          <NavItem>
+          <NavItem className="nav-item">
             <NavLink to="/events" className={location.pathname === '/events' ? 'active' : ''}>Events</NavLink>
           </NavItem>
-          <NavItem>
+          <NavItem className="nav-item">
             <NavLink to="/about" className={location.pathname === '/about' ? 'active' : ''}>About</NavLink>
           </NavItem>
-          <NavItem>
+          <NavItem className="nav-item">
             <NavLink to="/contact" className={location.pathname === '/contact' ? 'active' : ''}>Contact</NavLink>
           </NavItem>
-        </NavLinks>
+        </MobileNavLinks>
       </NavContent>
     </NavContainer>
   );
