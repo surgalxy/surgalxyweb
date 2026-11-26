@@ -3,194 +3,399 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Surgalxy · Links</title>
+<title>Surgalxy Links</title>
+<link rel="icon" href="/favicon.png">
+<meta name="description" content="Surgalxy links: Instagram, TikTok, YouTube, X, website and contact.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Marcellus&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,500&family=Syncopate:wght@400;700&display=swap" rel="stylesheet">
 <style>
-/* VOICE: quiet, sacred, awed — a threshold you step through, not a menu.
-   IDEA: the page behaves like a pilgrim's view up at a haloed colossus; each link is a lit gate.
-   PICTURE: a hooded colossus with a turning ring halo over a tiny crowd, under a starfield and aurora.
-   COLOUR and TYPE: deep indigo night, cyan halo, goldenrod #C2A032, vermilion, turquoise, rose glows; Marcellus + Outfit.
-   LAYOUT: one centred phone-width column: colossus, wordmark, gates, worlds strip, footer. */
-:root{color-scheme:dark;--bg:#070a1f;--ink:#eef3ff;--soft:#a9b6d8;--cyan:#5ff2ff;--gold:#e2c04a;--verm:#ff5a3c;--turq:#2fe0c0;--rose:#ff7eb6;--ice:#bfe6ff}
-:root[data-theme=light],:root[data-theme=dark]{color-scheme:dark}
-*{box-sizing:border-box;min-width:0}
-html,body{height:100%}
-body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 Outfit,system-ui,sans-serif;overflow-x:clip;-webkit-font-smoothing:antialiased}
-#stars{position:fixed;inset:0;width:100%;height:100%;z-index:0}
-.sky{position:fixed;inset:0;z-index:0;pointer-events:none;
- background:
-  radial-gradient(60% 40% at 50% 18%,rgba(95,242,255,.22),transparent 70%),
-  radial-gradient(45% 35% at 12% 40%,rgba(255,90,60,.18),transparent 70%),
-  radial-gradient(45% 35% at 90% 55%,rgba(47,224,192,.16),transparent 70%),
-  radial-gradient(70% 40% at 50% 105%,rgba(226,192,74,.22),transparent 70%),
-  linear-gradient(180deg,#060820 0%,#0a1238 45%,#0d1a3a 70%,#120f22 100%)}
-main{position:relative;z-index:1;max-width:520px;margin:0 auto;padding:28px 18px 40px}
-.hero{position:relative;height:clamp(300px,58vh,420px);margin:-8px -18px 0}
-.hero svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
-.halo{transform-origin:260px 150px;animation:spin 60s linear infinite}
-.halo2{transform-origin:260px 150px;animation:spin 90s linear infinite reverse}
-.pulse{animation:pulse 4.5s ease-in-out infinite}
-@keyframes spin{to{transform:rotate(360deg)}}
-@keyframes pulse{0%,100%{opacity:.55}50%{opacity:1}}
-h1{font:400 clamp(40px,11vw,54px)/1.05 Marcellus,serif;letter-spacing:.06em;text-align:center;margin:4px 0 6px;
- background:linear-gradient(90deg,var(--ice),#fff 35%,var(--cyan) 60%,var(--gold));-webkit-background-clip:text;background-clip:text;color:transparent;
- filter:drop-shadow(0 0 18px rgba(95,242,255,.35))}
-.tag{text-align:center;color:var(--soft);margin:0 auto 26px;max-width:34ch;text-wrap:balance;font-weight:300}
-.gates{display:grid;gap:14px;margin:0 0 34px}
-.gate{--g:var(--cyan);position:relative;display:flex;align-items:center;gap:14px;min-height:64px;padding:12px 18px 12px 14px;border-radius:18px;
- color:var(--ink);text-decoration:none;background:linear-gradient(135deg,rgba(255,255,255,.08),rgba(255,255,255,.02));
- border:1px solid color-mix(in srgb,var(--g) 45%,transparent);
- box-shadow:0 0 0 1px rgba(255,255,255,.03) inset,0 10px 30px -12px color-mix(in srgb,var(--g) 70%,transparent);
- backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);transition:transform .25s,box-shadow .25s,border-color .25s}
-.gate:hover,.gate:focus-visible{transform:translateY(-2px);border-color:var(--g);outline:none;
- box-shadow:0 0 0 1px var(--g) inset,0 0 34px -4px color-mix(in srgb,var(--g) 80%,transparent)}
-.gate .ic{flex:none;width:40px;height:40px;border-radius:50%;display:grid;place-items:center;
- background:radial-gradient(circle at 35% 30%,#fff 0 6%,var(--g) 40%,color-mix(in srgb,var(--g) 30%,#000) 100%);
- box-shadow:0 0 18px var(--g)}
-.gate .ic svg{width:20px;height:20px;fill:none;stroke:#061020;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-.gate b{display:block;font-weight:500;font-size:17px;line-height:1.2}
-.gate small{display:block;color:var(--soft);font-size:13.5px}
-.gate .go{margin-left:auto;flex:none;color:var(--g);font-size:20px}
-.gate.hero-link{min-height:76px;background:linear-gradient(120deg,color-mix(in srgb,var(--g) 30%,transparent),rgba(255,255,255,.03) 60%)}
-h2{font:400 22px/1.1 Marcellus,serif;letter-spacing:.04em;margin:0 0 4px}
-.sub{color:var(--soft);font-size:14px;margin:0 0 14px}
-.worlds{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;padding:4px 2px 14px;margin:0 -18px;padding-inline:18px;scrollbar-width:none}
-.worlds::-webkit-scrollbar{display:none}
-.world{flex:none;width:150px;scroll-snap-align:start;text-decoration:none;color:var(--ink)}
-.world .art{height:210px;border-radius:16px;overflow:hidden;border:1px solid rgba(255,255,255,.12);box-shadow:0 12px 28px -14px var(--g)}
-.world .art svg{display:block;width:100%;height:100%}
-.world span{display:block;font-size:14px;font-weight:500;margin-top:8px}
-.world:focus-visible .art{outline:2px solid var(--g);outline-offset:3px}
-.navs{display:flex;justify-content:flex-end;gap:8px;margin:-6px 0 26px}
-.navs button{width:44px;height:44px;border-radius:50%;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.05);color:var(--ink);font-size:18px;cursor:pointer}
-.navs button:focus-visible{outline:2px solid var(--cyan)}
-.mail{text-align:center;color:var(--soft);font-size:14px;margin:0 0 6px}
-.mail button{font:inherit;color:var(--gold);background:none;border:0;cursor:pointer;text-decoration:underline;text-underline-offset:3px;min-height:44px;padding:0 6px}
-footer{text-align:center;color:#6f7ba0;font-size:13px;margin-top:22px}
-.note{text-align:center;color:#6f7ba0;font-size:13px;margin:10px 0 0}
-@media(prefers-reduced-motion:reduce){.halo,.halo2,.pulse{animation:none}.gate{transition:none}}
+  /* Layout idea: phone-first link stack. The same living colour sky and mirror
+     plain as the home page, with one narrow column of glass link rows. */
+  :root {
+    color-scheme: dark;
+    --deep: #1b0f5c;      /* sky zenith, set live by the script */
+    --hot: #ff3d2e;       /* horizon colour */
+    --flare: #ff9f1c;     /* aurora colour */
+    --light: #fff1b8;     /* glow and highlights */
+    --ink: #fbf6ff;       /* text */
+    --ink-soft: rgba(251, 246, 255, 0.78);
+    --display: "Syncopate", "Eurostile", "Arial Black", sans-serif;
+    --serif: "Cormorant Garamond", "Iowan Old Style", Georgia, serif;
+    --gutter: clamp(18px, 4vw, 56px);
+  }
+  * { box-sizing: border-box; }
+  html, body { height: 100%; margin: 0; }
+  body {
+    background: linear-gradient(180deg, var(--deep) 0%, var(--hot) 62%, var(--flare) 70%, #05030f 71%, #05030f 100%);
+    color: var(--ink);
+    font-family: var(--display);
+    overflow-x: hidden;
+  }
+  #sky { position: fixed; inset: 0; width: 100%; height: 100%; display: block; }
+
+  .frame {
+    position: relative;
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(22px, 4vh, 36px);
+    padding: clamp(28px, 6vh, 64px) var(--gutter);
+  }
+  .head { display: flex; flex-direction: column; align-items: center; gap: 10px; text-align: center; }
+  h1 {
+    margin: 0;
+    font-weight: 700;
+    font-size: clamp(1.7rem, 8.6vw, 3rem);
+    line-height: 1;
+    letter-spacing: -0.02em;
+    text-transform: uppercase;
+    text-shadow: 0 0 34px color-mix(in srgb, var(--light) 55%, transparent), 0 2px 24px rgba(5, 3, 15, 0.45);
+  }
+  .line {
+    margin: 0;
+    font-family: var(--serif);
+    font-style: italic;
+    font-weight: 500;
+    font-size: clamp(1.15rem, 4.6vw, 1.5rem);
+    text-shadow: 0 1px 18px rgba(5, 3, 15, 0.7);
+  }
+  .links { display: flex; flex-direction: column; gap: 12px; width: 100%; max-width: 440px; }
+  .link {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 19px 22px;
+    border-radius: 18px;
+    color: var(--ink);
+    text-decoration: none;
+    background: rgba(5, 3, 15, 0.36);
+    border: 1px solid rgba(255, 255, 255, 0.24);
+    -webkit-backdrop-filter: blur(14px);
+    backdrop-filter: blur(14px);
+    transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+  }
+  .link:hover {
+    transform: translateY(-2px);
+    background: color-mix(in srgb, var(--light) 20%, rgba(5, 3, 15, 0.36));
+    border-color: rgba(255, 255, 255, 0.7);
+  }
+  .link__name { font-size: 12px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; }
+  .link__sub {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 1.15rem;
+    color: var(--ink-soft);
+    overflow-wrap: anywhere;
+    text-align: right;
+  }
+  .copy {
+    font: inherit;
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink);
+    background: rgba(5, 3, 15, 0.34);
+    border: 1px solid rgba(255, 255, 255, 0.28);
+    border-radius: 999px;
+    padding: 8px 16px;
+    cursor: pointer;
+  }
+  .copy:hover { background: rgba(255, 255, 255, 0.16); }
+  .skies {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 7px 9px 7px 14px;
+    border-radius: 999px;
+    background: rgba(5, 3, 15, 0.34);
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+  }
+  .skies__name { font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--ink-soft); white-space: nowrap; }
+  .skies__list { display: flex; gap: 7px; }
+  .swatch {
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    border: 2px solid rgba(255, 255, 255, 0.25);
+    padding: 0;
+    cursor: pointer;
+    transition: transform 0.25s ease, border-color 0.25s ease;
+  }
+  .swatch:hover { transform: scale(1.15); }
+  .swatch[aria-pressed="true"] { border-color: #fff; transform: scale(1.15); }
+  button:focus-visible, a:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
+  @media (prefers-reduced-motion: reduce) {
+    .swatch, .link { transition: none; }
+  }
 </style>
 </head>
 <body>
-<canvas id="stars" aria-hidden="true"></canvas>
-<div class="sky" aria-hidden="true"></div>
-<main>
- <div class="hero" aria-hidden="true">
-  <svg viewBox="0 0 520 420" preserveAspectRatio="xMidYMax meet">
-   <defs>
-    <radialGradient id="core" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#fff"/><stop offset=".25" stop-color="#bff9ff"/><stop offset=".6" stop-color="#5ff2ff" stop-opacity=".35"/><stop offset="1" stop-color="#5ff2ff" stop-opacity="0"/></radialGradient>
-    <linearGradient id="robe" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1b2a5e"/><stop offset=".55" stop-color="#101a42"/><stop offset="1" stop-color="#070b22"/></linearGradient>
-    <linearGradient id="rim" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#ff5a3c"/><stop offset=".5" stop-color="#e2c04a"/><stop offset="1" stop-color="#2fe0c0"/></linearGradient>
-    <linearGradient id="beam" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5ff2ff" stop-opacity=".0"/><stop offset=".5" stop-color="#5ff2ff" stop-opacity=".55"/><stop offset="1" stop-color="#e2c04a" stop-opacity=".0"/></linearGradient>
-    <filter id="blur"><feGaussianBlur stdDeviation="6"/></filter>
-   </defs>
-   <circle cx="260" cy="150" r="120" fill="url(#core)" class="pulse"/>
-   <g class="halo" fill="none">
-    <circle cx="260" cy="150" r="112" stroke="#5ff2ff" stroke-width="2.5" stroke-dasharray="2 9" opacity=".9"/>
-    <circle cx="260" cy="150" r="100" stroke="url(#rim)" stroke-width="5" stroke-dasharray="60 14 6 14" filter="url(#blur)" opacity=".8"/>
-    <circle cx="260" cy="150" r="100" stroke="url(#rim)" stroke-width="2"  stroke-dasharray="60 14 6 14"/>
-   </g>
-   <g class="halo2" fill="none">
-    <circle cx="260" cy="150" r="132" stroke="#e2c04a" stroke-width="1.2" stroke-dasharray="1 5 30 5" opacity=".8"/>
-    <circle cx="260" cy="150" r="78" stroke="#ff7eb6" stroke-width="1.4" stroke-dasharray="12 8" opacity=".75"/>
-   </g>
-   <rect x="254" y="150" width="12" height="270" fill="url(#beam)" class="pulse"/>
-   <!-- colossus: hood, mask, robe-as-city -->
-   <path d="M260 92c-34 0-56 30-58 66-2 34-8 58-40 92-30 32-60 64-82 170h360c-22-106-52-138-82-170-32-34-38-58-40-92-2-36-24-66-58-66z" fill="url(#robe)" stroke="url(#rim)" stroke-width="1.4" stroke-opacity=".7"/>
-   <ellipse cx="260" cy="150" rx="22" ry="30" fill="#05070f"/>
-   <rect x="258.5" y="128" width="3" height="40" rx="1.5" fill="#5ff2ff" class="pulse"/>
-   <g fill="#e2c04a" opacity=".85">
-    <rect x="218" y="250" width="6" height="3"/><rect x="232" y="270" width="5" height="3"/><rect x="290" y="258" width="6" height="3"/><rect x="300" y="282" width="5" height="3"/>
-    <rect x="196" y="300" width="7" height="3"/><rect x="318" y="306" width="6" height="3"/><rect x="246" y="296" width="5" height="3"/><rect x="276" y="320" width="7" height="3"/>
-    <rect x="170" y="340" width="6" height="3"/><rect x="344" y="344" width="7" height="3"/><rect x="226" y="350" width="5" height="3"/><rect x="300" y="362" width="5" height="3"/>
-   </g>
-   <g fill="#ff5a3c" opacity=".85"><rect x="208" y="326" width="4" height="3"/><rect x="330" y="330" width="4" height="3"/><rect x="262" y="372" width="4" height="3"/></g>
-   <path d="M0 420V398c40-6 80-10 130-8s90 6 130 6 90-4 130-6 90 2 130 8v22z" fill="#04050e"/>
-   <g fill="#04050e" id="crowd"></g>
-  </svg>
- </div>
+<canvas id="sky" aria-hidden="true"></canvas>
 
- <h1>SURGALXY</h1>
- <p class="tag">Cinematic AI worlds — colossi, pilgrims and sacred machines, in light and colour.</p>
+<main class="frame">
+  <header class="head">
+    <h1>Surgalxy</h1>
+    <p class="line">Worlds of awe, cosmic and mythic.</p>
+  </header>
 
- <nav class="gates" aria-label="Links">
-  <a class="gate hero-link" style="--g:var(--cyan)" href="https://www.instagram.com/surgalxy" target="_blank" rel="noopener">
-   <span class="ic"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".6"/></svg></span>
-   <span><b>Watch on Instagram</b><small>Newest videos first</small></span><span class="go">→</span></a>
-  <a class="gate" style="--g:var(--rose)" href="https://www.tiktok.com/@surgalxy" target="_blank" rel="noopener">
-   <span class="ic"><svg viewBox="0 0 24 24"><path d="M14 3v11.5a3.5 3.5 0 1 1-3.5-3.5"/><path d="M14 3c.5 3 2.5 5 5.5 5"/></svg></span>
-   <span><b>TikTok</b><small>Short journeys through the worlds</small></span><span class="go">→</span></a>
-  <a class="gate" style="--g:var(--turq)" href="https://youtube.com/@surgalxy" target="_blank" rel="noopener">
-   <span class="ic"><svg viewBox="0 0 24 24"><rect x="2.5" y="5.5" width="19" height="13" rx="4"/><path d="m10 9.5 5 2.5-5 2.5z"/></svg></span>
-   <span><b>YouTube</b><small>Full-length pieces</small></span><span class="go">→</span></a>
-  <a class="gate" style="--g:var(--ice)" href="https://x.com/surgalxy" target="_blank" rel="noopener">
-   <span class="ic"><svg viewBox="0 0 24 24"><path d="M4 4l16 16M20 4 4 20"/></svg></span>
-   <span><b>X</b><small>Stills and drops</small></span><span class="go">→</span></a>
-  <a class="gate" style="--g:var(--gold)" href="https://surgalxy.com" target="_blank" rel="noopener">
-   <span class="ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18"/></svg></span>
-   <span><b>Enter Surgalxy</b><small>The immersive site — five worlds, with sound</small></span><span class="go">→</span></a>
-  <a class="gate" style="--g:var(--verm)" href="mailto:surgalxy@gmail.com">
-   <span class="ic"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="m4 7 8 6 8-6"/></svg></span>
-   <span><b>Work with me</b><small>Commissions, music videos, collaborations</small></span><span class="go">→</span></a>
- </nav>
+  <nav class="links" aria-label="Surgalxy links">
+    <a class="link" href="https://www.instagram.com/surgalxy/" target="_blank" rel="noopener"><span class="link__name">Instagram</span><span class="link__sub">@surgalxy</span></a>
+    <a class="link" href="https://www.tiktok.com/@surgalxy" target="_blank" rel="noopener"><span class="link__name">TikTok</span><span class="link__sub">@surgalxy</span></a>
+    <a class="link" href="https://youtube.com/@surgalxy" target="_blank" rel="noopener"><span class="link__name">YouTube</span><span class="link__sub">@surgalxy</span></a>
+    <a class="link" href="https://x.com/surgalxy" target="_blank" rel="noopener"><span class="link__name">X</span><span class="link__sub">@surgalxy</span></a>
+    <a class="link" href="/"><span class="link__name">Website</span><span class="link__sub">surgalxy.com</span></a>
+    <a class="link" href="mailto:surgalxy@gmail.com"><span class="link__name">Email</span><span class="link__sub">surgalxy@gmail.com</span></a>
+  </nav>
 
- <h2>Worlds</h2>
- <p class="sub">Series from the Surgalxy universe</p>
- <div class="worlds" id="worlds" tabindex="0" aria-label="Worlds"></div>
- <div class="navs"><button id="prev" aria-label="Previous world">←</button><button id="next" aria-label="Next world">→</button></div>
+  <button class="copy" id="copyBtn" type="button">Copy email</button>
 
- <p class="mail">Email: <button id="copy" type="button">surgalxy@gmail.com</button><span id="copied" aria-live="polite"></span></p>
- <footer>© Surgalxy · Winchester, UK</footer>
+  <div class="skies" role="group" aria-label="Choose a sky">
+    <span class="skies__name" id="skyName">Ember Tide</span>
+    <div class="skies__list" id="skyList"></div>
+  </div>
 </main>
 
-<script>
-{
-const worlds=[
- {n:'Colossus Valley',a:'#ff8a3d',b:'#3a1408',c:'#ffd9a0'},
- {n:'The Halo Pilgrims',a:'#ff5a6e',b:'#2a0a1a',c:'#ffd0a8'},
- {n:'Crimson Masks',a:'#e0283a',b:'#0f2a2c',c:'#9fe8e0'},
- {n:'The Summoned',a:'#5ff2ff',b:'#0a1238',c:'#e2c04a'},
- {n:'Godhead',a:'#e2c04a',b:'#101a42',c:'#ffffff'},
- {n:'Crimson Thaw',a:'#ff3b30',b:'#0d2238',c:'#cfefff'}
-];
-const art=(w,i)=>`<svg viewBox="0 0 150 210" preserveAspectRatio="xMidYMid slice">
- <defs><linearGradient id="wg${i}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${w.b}"/><stop offset=".6" stop-color="${w.a}" stop-opacity=".55"/><stop offset="1" stop-color="${w.b}"/></linearGradient>
- <radialGradient id="wh${i}"><stop offset="0" stop-color="${w.c}"/><stop offset="1" stop-color="${w.c}" stop-opacity="0"/></radialGradient></defs>
- <rect width="150" height="210" fill="url(#wg${i})"/>
- <circle cx="75" cy="70" r="46" fill="url(#wh${i})" opacity=".55"/>
- <circle cx="75" cy="70" r="34" fill="none" stroke="${w.c}" stroke-width="2" stroke-dasharray="${8+i*3} 5"/>
- <path d="M75 46c-12 0-19 10-20 22-1 12-4 22-16 34-12 14-22 30-28 108h128c-6-78-16-94-28-108-12-12-15-22-16-34-1-12-8-22-20-22z" fill="${w.b}"/>
- <rect x="74" y="58" width="2" height="18" fill="${w.c}"/>
- <path d="M0 210v-12c25-4 50-6 75-6s50 2 75 6v12z" fill="#000" opacity=".55"/>
- ${Array.from({length:9},(_,k)=>`<rect x="${12+k*15}" y="${190+(k%3)}" width="3" height="8" rx="1.5" fill="#000"/>`).join('')}
-</svg>`;
-const box=document.getElementById('worlds');
-box.innerHTML=worlds.map((w,i)=>`<a class="world" style="--g:${w.a}" href="https://www.instagram.com/surgalxy" target="_blank" rel="noopener"><div class="art">${art(w,i)}</div><span>${w.n}</span></a>`).join('');
-const step=d=>box.scrollBy({left:d*162,behavior:'smooth'});
-document.getElementById('prev').onclick=()=>step(-1);
-document.getElementById('next').onclick=()=>step(1);
-box.addEventListener('keydown',e=>{if(e.key==='ArrowRight'){e.preventDefault();step(1)}if(e.key==='ArrowLeft'){e.preventDefault();step(-1)}});
+<script id="frag" type="x-shader/x-fragment">
+precision highp float;
+uniform vec2 R;
+uniform float T;
+uniform vec2 M;
+uniform vec3 C0, C1, C2, C3;
+#define HOR -0.3
 
-const crowd=document.getElementById('crowd');
-let s='';for(let i=0;i<46;i++){const x=6+i*11.2+(i%3)*2,h=9+((i*7)%5);s+=`<rect x="${x}" y="${398-h}" width="4" height="${h}" rx="2"/><circle cx="${x+2}" cy="${396-h}" r="2.6"/>`}
-crowd.innerHTML=s;
-
-const btn=document.getElementById('copy'),out=document.getElementById('copied');
-btn.addEventListener('click',async()=>{try{await navigator.clipboard.writeText(btn.textContent);out.textContent=' · copied'}catch(e){out.textContent=' · select to copy'}setTimeout(()=>out.textContent='',2200)});
-
-const cv=document.getElementById('stars'),cx=cv.getContext('2d');
-const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
-const cols=['#ffffff','#bfe6ff','#5ff2ff','#e2c04a','#ff7eb6','#2fe0c0'];
-let stars=[],W=0,H=0;
-const size=()=>{const r=devicePixelRatio||1;W=innerWidth;H=innerHeight;cv.width=W*r;cv.height=H*r;cx.setTransform(r,0,0,r,0,0);
- stars=Array.from({length:Math.round(W*H/2600)},()=>({x:Math.random()*W,y:Math.random()*H,r:Math.random()*1.3+.2,c:cols[Math.random()*cols.length|0],p:Math.random()*6.28,v:.4+Math.random()}))};
-const draw=t=>{cx.clearRect(0,0,W,H);for(const s of stars){const a=reduce?.7:.35+.65*Math.abs(Math.sin(s.p+t*.0006*s.v));cx.globalAlpha=a;cx.fillStyle=s.c;cx.beginPath();cx.arc(s.x,s.y,s.r,0,6.28);cx.fill()}
- cx.globalAlpha=1;if(!reduce)requestAnimationFrame(draw)};
-const ro=new ResizeObserver(()=>{size();if(reduce)draw(0)});ro.observe(document.body);
-size();requestAnimationFrame(draw);
+float hash(vec2 p) {
+  p = fract(p * vec2(123.34, 456.21));
+  p += dot(p, p + 45.32);
+  return fract(p.x * p.y);
 }
+float noise(vec2 p) {
+  vec2 i = floor(p), f = fract(p);
+  f = f * f * (3.0 - 2.0 * f);
+  return mix(mix(hash(i), hash(i + vec2(1.0, 0.0)), f.x),
+             mix(hash(i + vec2(0.0, 1.0)), hash(i + vec2(1.0, 1.0)), f.x), f.y);
+}
+float fbm(vec2 p) {
+  float a = 0.5, s = 0.0;
+  for (int i = 0; i < 5; i++) {
+    s += a * noise(p);
+    p = p * 2.03 + vec2(17.1, 3.7);
+    a *= 0.5;
+  }
+  return s;
+}
+
+vec3 scene(vec2 p) {
+  float A = R.x / R.y;
+  float h = clamp((p.y - HOR) / (0.5 - HOR), 0.0, 1.0);
+
+  // sky: domain-warped colour currents
+  vec2 q = p * vec2(1.1, 1.7) + M * 0.03;
+  float t = T * 0.025;
+  float w1 = fbm(q * 1.4 + vec2(t, -t * 0.6));
+  float w2 = fbm(q * 2.2 + w1 * 2.4 + vec2(-t * 0.8, t * 0.3));
+  float f = fbm(q * 1.1 + w2 * 2.0);
+  vec3 col = mix(C1, C0, smoothstep(0.0, 0.95, h + (w1 - 0.5) * 0.4));
+  float band = smoothstep(0.40, 0.74, f) * (1.0 - h * 0.5);
+  col = mix(col, C2, band * 0.85);
+  float hi = smoothstep(0.5, 0.85, w2) * smoothstep(0.35, 0.7, f);
+  col += C3 * hi * 0.32;
+  col += mix(C2, C3, 0.5) * exp(-h * 7.0) * 0.5;
+
+  // stars
+  vec2 g = p * 85.0;
+  vec2 id = floor(g);
+  vec2 fr = fract(g) - 0.5;
+  float rnd = hash(id);
+  float sd = length(fr - (vec2(hash(id + 3.1), hash(id + 7.7)) - 0.5) * 0.7);
+  float st = step(0.955, rnd) * smoothstep(0.1, 0.0, sd) * (0.55 + 0.45 * sin(T * 1.4 + rnd * 40.0));
+  col += C3 * st * h * (1.0 - band);
+
+  // planet, half out of frame
+  vec2 pc = vec2(-A * 0.5 + 0.1, 0.56) + M * 0.012;
+  float pr = 0.4;
+  float pd = length(p - pc);
+  vec2 n = (p - pc) / pr;
+  float lit = smoothstep(-0.25, 1.0, dot(n, normalize(vec2(0.65, -0.76))));
+  float bands = fbm(vec2(n.x * 1.6 + T * 0.01, n.y * 7.0 + n.x * 1.5));
+  vec3 pcol = mix(C0 * 0.3, mix(C1, C3, 0.35 + 0.4 * bands), lit * lit);
+  pcol = mix(pcol, C2, smoothstep(0.55, 0.8, bands) * lit * 0.6);
+  col = mix(col, pcol, smoothstep(pr + 0.003, pr - 0.003, pd));
+  col += C3 * exp(-abs(pd - pr) * 38.0) * 0.28 * (0.3 + lit);
+
+  return col;
+}
+
+void main() {
+  vec2 p = (gl_FragCoord.xy - 0.5 * R) / R.y;
+  vec3 col;
+  if (p.y >= HOR) {
+    col = scene(p);
+  } else {
+    // mirror plain
+    float d = HOR - p.y;
+    float rip = (noise(vec2(p.x * 38.0, d * 320.0 - T * 0.35)) - 0.5) * 0.014 * (0.25 + d * 7.0);
+    col = scene(vec2(p.x + rip, HOR + d * 1.05));
+    col *= clamp(0.72 - d * 1.5, 0.12, 1.0);
+    col += C0 * 0.05;
+  }
+  col += C3 * exp(-abs(p.y - HOR) * 520.0) * 0.3;
+
+  vec2 uv = gl_FragCoord.xy / R;
+  col *= 1.0 - 0.38 * pow(length(uv - 0.5) * 1.25, 2.2);
+  col += (hash(gl_FragCoord.xy + T) - 0.5) * 0.022;
+  gl_FragColor = vec4(col, 1.0);
+}
+</script>
+
+<script>
+(function () {
+  var SKIES = [
+    { name: 'Ember Tide',   c: ['#1b0f5c', '#ff3d2e', '#ff9f1c', '#fff1b8'] },
+    { name: 'Cobalt Saint', c: ['#06123f', '#1f5bff', '#ffb000', '#ffffff'] },
+    { name: 'Jade Reactor', c: ['#04303a', '#00c9a7', '#ffd23f', '#f4fff2'] },
+    { name: 'Rose Nebula',  c: ['#2a0845', '#ff2e88', '#36c5ff', '#ffe3f3'] },
+    { name: 'Orchid Dawn',  c: ['#123a5a', '#b28dff', '#ff8a5c', '#eaffd0'] }
+  ];
+  var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var root = document.documentElement;
+  var nameEl = document.getElementById('skyName');
+  var listEl = document.getElementById('skyList');
+
+  function rgb(hex) {
+    var n = parseInt(hex.slice(1), 16);
+    return [(n >> 16 & 255) / 255, (n >> 8 & 255) / 255, (n & 255) / 255];
+  }
+  SKIES.forEach(function (s) { s.f = s.c.map(rgb); });
+
+  var index = 0, picked = false;
+  try {
+    var saved = parseInt(localStorage.getItem('surgalxy-sky'), 10);
+    if (saved >= 0 && saved < SKIES.length) { index = saved; picked = true; }
+  } catch (e) {}
+
+  var cur = SKIES[index].f.map(function (c) { return c.slice(); });
+  var buttons = [];
+
+  function setSky(i, byUser) {
+    index = i;
+    var s = SKIES[i];
+    nameEl.textContent = s.name;
+    root.style.setProperty('--deep', s.c[0]);
+    root.style.setProperty('--hot', s.c[1]);
+    root.style.setProperty('--flare', s.c[2]);
+    root.style.setProperty('--light', s.c[3]);
+    buttons.forEach(function (b, k) { b.setAttribute('aria-pressed', k === i ? 'true' : 'false'); });
+    if (byUser) {
+      picked = true;
+      try { localStorage.setItem('surgalxy-sky', String(i)); } catch (e) {}
+    }
+  }
+
+  SKIES.forEach(function (s, i) {
+    var b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'swatch';
+    b.id = 'sky-' + i;
+    b.title = s.name;
+    b.setAttribute('aria-label', s.name + ' sky');
+    b.style.background = 'linear-gradient(135deg, ' + s.c[1] + ' 0 50%, ' + s.c[2] + ' 50% 100%)';
+    b.addEventListener('click', function () { setSky(i, true); });
+    listEl.appendChild(b);
+    buttons.push(b);
+  });
+  setSky(index, false);
+
+  // The sky drifts to the next palette on its own until someone picks one.
+  if (!reduce) {
+    setInterval(function () {
+      if (!picked && !document.hidden) setSky((index + 1) % SKIES.length, false);
+    }, 14000);
+  }
+
+  var copyBtn = document.getElementById('copyBtn');
+  copyBtn.addEventListener('click', function () {
+    var done = function (t) {
+      copyBtn.textContent = t;
+      setTimeout(function () { copyBtn.textContent = 'Copy email'; }, 1800);
+    };
+    try {
+      navigator.clipboard.writeText('surgalxy@gmail.com').then(
+        function () { done('Copied'); },
+        function () { done('Select the address to copy'); }
+      );
+    } catch (e) { done('Select the address to copy'); }
+  });
+
+  // WebGL sky
+  var canvas = document.getElementById('sky');
+  var gl = null;
+  try { gl = canvas.getContext('webgl', { antialias: false, alpha: false }); } catch (e) {}
+  if (!gl) { canvas.style.display = 'none'; return; }
+
+  function compile(type, src) {
+    var s = gl.createShader(type);
+    gl.shaderSource(s, src);
+    gl.compileShader(s);
+    if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) { console.log(gl.getShaderInfoLog(s)); return null; }
+    return s;
+  }
+  var vs = compile(gl.VERTEX_SHADER, 'attribute vec2 a; void main(){ gl_Position = vec4(a, 0.0, 1.0); }');
+  var fs = compile(gl.FRAGMENT_SHADER, document.getElementById('frag').textContent);
+  var prog = gl.createProgram();
+  if (!vs || !fs) { canvas.style.display = 'none'; return; }
+  gl.attachShader(prog, vs); gl.attachShader(prog, fs); gl.linkProgram(prog);
+  if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) { canvas.style.display = 'none'; return; }
+  gl.useProgram(prog);
+
+  var buf = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
+  var loc = gl.getAttribLocation(prog, 'a');
+  gl.enableVertexAttribArray(loc);
+  gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
+
+  var U = {};
+  ['R', 'T', 'M', 'C0', 'C1', 'C2', 'C3'].forEach(function (n) { U[n] = gl.getUniformLocation(prog, n); });
+
+  function resize() {
+    var dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+    var w = Math.max(1, Math.round(canvas.clientWidth * dpr));
+    var h = Math.max(1, Math.round(canvas.clientHeight * dpr));
+    if (canvas.width !== w || canvas.height !== h) {
+      canvas.width = w; canvas.height = h;
+      gl.viewport(0, 0, w, h);
+    }
+  }
+  window.addEventListener('resize', resize);
+  resize();
+
+  var mt = [0, 0], m = [0, 0];
+  window.addEventListener('pointermove', function (e) {
+    mt[0] = (e.clientX / window.innerWidth) * 2 - 1;
+    mt[1] = 1 - (e.clientY / window.innerHeight) * 2;
+  });
+
+  var start = performance.now();
+  function frame(now) {
+    resize();
+    var tgt = SKIES[index].f;
+    for (var i = 0; i < 4; i++) for (var k = 0; k < 3; k++) cur[i][k] += (tgt[i][k] - cur[i][k]) * 0.03;
+    m[0] += (mt[0] - m[0]) * 0.04; m[1] += (mt[1] - m[1]) * 0.04;
+    gl.uniform2f(U.R, canvas.width, canvas.height);
+    gl.uniform1f(U.T, reduce ? 12.0 : (now - start) / 1000 + 12.0);
+    gl.uniform2f(U.M, reduce ? 0 : m[0], reduce ? 0 : m[1]);
+    gl.uniform3fv(U.C0, cur[0]); gl.uniform3fv(U.C1, cur[1]);
+    gl.uniform3fv(U.C2, cur[2]); gl.uniform3fv(U.C3, cur[3]);
+    gl.drawArrays(gl.TRIANGLES, 0, 3);
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+})();
 </script>
 </body>
 </html>
