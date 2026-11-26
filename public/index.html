@@ -1,356 +1,1279 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SURGALXY</title>
-<meta name="description" content="SURGALXY — Ethereal Tech. AI-generated visual worlds.">
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Surgalxy</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="SURGALXY. Ethereal Tech. A descent through five AI-built worlds.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,300;1,400&family=Lexend+Zetta:wght@200;300&family=Martian+Mono:wght@300;400&display=swap">
 <style>
-  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-
+  /* Layout: one fixed, full-bleed WebGL world behind a tall scroll track. Each world is a sticky
+     title card set low and left like a film title; the HUD stays pinned to the screen edges. */
   :root {
-    --bg: #08080c;
-    --surface: #0e0e14;
-    --text-primary: #e8e6f0;
-    --text-dim: #6b6880;
-    --text-muted: #3d3a4d;
-    --accent: #8b7cf6;
-    --accent-dim: rgba(139, 124, 246, 0.08);
-    --accent-glow: rgba(139, 124, 246, 0.15);
-    --chromatic-1: #6ee7b7;
-    --chromatic-2: #7dd3fc;
-    --chromatic-3: #c4b5fd;
-    --grain-opacity: 0.035;
+    color-scheme: dark;
+    --void: #05061A;       /* indigo night, the ground everything glows against */
+    --ink: #EEF0FB;        /* pearl */
+    --dim: #A2A8CE;        /* haze */
+    --line: #2C315C;
+    --glow: #B9C8FF;       /* swapped per world by the script */
+    --display: "Lexend Zetta", "Avenir Next", "Segoe UI", sans-serif;
+    --serif: "Cormorant Garamond", "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+    --mono: "Martian Mono", "SFMono-Regular", Menlo, Consolas, monospace;
   }
-
-  html { font-size: 16px; }
-
+  html { background: var(--void); }
   body {
-    background: var(--bg);
-    color: var(--text-primary);
-    font-family: 'Instrument Sans', sans-serif;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-    position: relative;
+    background: var(--void);
+    color: var(--ink);
+    font-family: var(--serif);
     -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+  }
+  html.locked, html.locked body { overflow: hidden; }
+
+  #world { position: fixed; inset: 0; width: 100%; height: 100%; display: block; z-index: 0; }
+  #media { position: fixed; inset: 0; z-index: 1; pointer-events: none; overflow: hidden; }
+  #media .media {
+    position: absolute; inset: 0; width: 100%; height: 100%;
+    object-fit: cover; opacity: 0; will-change: opacity, transform;
+  }
+  #scrim {
+    position: fixed; inset: 0; z-index: 2; pointer-events: none;
+    background: linear-gradient(to top, rgba(5, 6, 26, .55), rgba(5, 6, 26, 0) 40%);
+  }
+  html.no-gl #world { display: none; }
+  html.no-gl body {
+    background:
+      radial-gradient(90% 60% at 50% 32%, color-mix(in srgb, var(--glow) 32%, var(--void)), var(--void) 72%)
+      fixed;
   }
 
-  /* ── Grain overlay ── */
-  body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-    opacity: var(--grain-opacity);
-    pointer-events: none;
-    z-index: 100;
+  /* ---------- scroll track ---------- */
+  #track { position: relative; z-index: 3; }
+  .chapter { position: relative; height: 300vh; }
+  .chapter.threshold { height: 230vh; }
+  .chapter.outro { height: 170vh; }
+  .stage {
+    position: sticky; top: 0;
+    height: 100vh; height: 100svh;
+    box-sizing: border-box;
+    display: flex; flex-direction: column; justify-content: flex-end;
+    padding-left: max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(64px, calc(env(safe-area-inset-right, 0px) + 56px));
+    padding-block: 0 calc(env(safe-area-inset-bottom, 0px) + 9svh);
   }
+  .card { display: grid; gap: 12px; max-width: 36rem; min-width: 0; will-change: opacity, transform; }
 
-  /* ── Ambient glow orbs ── */
-  .orb {
-    position: fixed;
-    border-radius: 50%;
-    filter: blur(120px);
-    opacity: 0;
-    animation: orbFadeIn 3s ease forwards;
-    pointer-events: none;
-    will-change: transform;
+  .num {
+    margin: 0; font-family: var(--display); font-weight: 300;
+    font-size: 12px; letter-spacing: .32em; color: var(--glow);
   }
+  .title {
+    margin: 0; font-family: var(--display); font-weight: 200;
+    font-size: clamp(25px, 7vw, 58px); line-height: 1.1; letter-spacing: .01em;
+    text-wrap: balance; overflow-wrap: anywhere;
+    text-shadow: 0 0 30px color-mix(in srgb, var(--glow) 42%, transparent), 0 2px 18px rgba(5, 6, 26, .6);
+  }
+  .caption {
+    margin: 0; max-width: 26ch;
+    font-family: var(--serif); font-style: italic; font-weight: 300;
+    font-size: clamp(20px, 5vw, 30px); line-height: 1.3;
+    text-wrap: pretty;
+    text-shadow: 0 1px 14px rgba(5, 6, 26, .85);
+  }
+  .scale {
+    margin: 6px 0 0; display: flex; gap: 10px; align-items: center;
+    font-family: var(--mono); font-weight: 300; font-size: 11.5px;
+    color: var(--dim); font-variant-numeric: tabular-nums;
+  }
+  .scale::before { content: ""; width: 28px; height: 1px; background: var(--glow); opacity: .8; }
 
-  .orb-1 {
-    width: 600px; height: 600px;
-    background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
-    top: -15%; right: -10%;
-    animation-delay: 0.5s;
-    animation-duration: 3s;
-  }
-  .orb-2 {
-    width: 400px; height: 400px;
-    background: radial-gradient(circle, rgba(110, 231, 183, 0.06) 0%, transparent 70%);
-    bottom: -10%; left: -5%;
-    animation-delay: 1s;
-    animation-duration: 3.5s;
-  }
-  .orb-3 {
-    width: 300px; height: 300px;
-    background: radial-gradient(circle, rgba(125, 211, 252, 0.04) 0%, transparent 70%);
-    top: 40%; left: 50%;
-    transform: translateX(-50%);
-    animation-delay: 1.5s;
-    animation-duration: 4s;
-  }
-
-  @keyframes orbFadeIn {
-    to { opacity: 1; }
-  }
-
-  /* ── Slow drift for orbs ── */
-  .orb-1 { animation: orbFadeIn 3s 0.5s ease forwards, drift1 25s 3s ease-in-out infinite; }
-  .orb-2 { animation: orbFadeIn 3.5s 1s ease forwards, drift2 30s 4s ease-in-out infinite; }
-  .orb-3 { animation: orbFadeIn 4s 1.5s ease forwards, drift3 20s 5s ease-in-out infinite; }
-
-  @keyframes drift1 {
-    0%, 100% { transform: translate(0, 0); }
-    50% { transform: translate(-30px, 20px); }
-  }
-  @keyframes drift2 {
-    0%, 100% { transform: translate(0, 0); }
-    50% { transform: translate(20px, -15px); }
-  }
-  @keyframes drift3 {
-    0%, 100% { transform: translateX(-50%) translate(0, 0); }
-    50% { transform: translateX(-50%) translate(15px, 25px); }
-  }
-
-  /* ── Horizontal rule lines ── */
-  .rule-top, .rule-bottom {
-    position: fixed;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 0;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, var(--text-muted), transparent);
-    animation: ruleExpand 2s 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  }
-  .rule-top { top: 15%; }
-  .rule-bottom { bottom: 15%; }
-
-  @keyframes ruleExpand {
-    to { width: min(80vw, 700px); }
-  }
-
-  /* ── Main content ── */
-  .container {
-    text-align: center;
-    position: relative;
-    z-index: 10;
-    padding: 2rem;
-  }
-
-  /* Wordmark */
+  /* threshold */
+  .threshold .stage { justify-content: center; align-items: center; padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 0 6svh; }
+  .threshold .card { justify-items: center; text-align: center; gap: 14px; }
   .wordmark {
-    font-family: 'Syne', sans-serif;
-    font-weight: 800;
-    font-size: clamp(2.8rem, 8vw, 5.5rem);
-    letter-spacing: 0.28em;
-    text-transform: uppercase;
-    color: var(--text-primary);
-    opacity: 0;
-    transform: translateY(12px);
-    animation: fadeUp 1.4s 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-    position: relative;
-    line-height: 1;
-    margin-right: -0.28em; /* compensate tracking */
+    margin: 0; font-family: var(--display); font-weight: 200;
+    font-size: clamp(21px, 7.2vw, 66px); letter-spacing: .1em; line-height: 1;
+    padding-left: .1em;
+    text-shadow: 0 0 34px rgba(185, 200, 255, .55), 0 0 2px rgba(255, 255, 255, .6);
   }
-
-  /* Subtle chromatic shimmer on hover */
-  .wordmark::after {
-    content: 'SURGALXY';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(135deg, var(--chromatic-1), var(--chromatic-2), var(--chromatic-3));
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-    opacity: 0;
-    transition: opacity 0.6s ease;
-  }
-  .wordmark:hover::after {
-    opacity: 1;
-  }
-
   .tagline {
-    font-family: 'Instrument Sans', sans-serif;
-    font-weight: 400;
-    font-size: clamp(0.7rem, 1.8vw, 0.85rem);
-    letter-spacing: 0.35em;
-    text-transform: uppercase;
-    color: var(--text-dim);
-    margin-top: 1.4rem;
-    opacity: 0;
-    transform: translateY(10px);
-    animation: fadeUp 1.4s 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-    margin-right: -0.35em;
+    margin: 0; font-family: var(--serif); font-style: italic; font-weight: 300;
+    font-size: clamp(19px, 4.6vw, 26px); color: var(--ink); opacity: .86;
   }
+  .cue {
+    position: absolute; left: 0; right: 0; bottom: calc(env(safe-area-inset-bottom, 0px) + 28px);
+    opacity: 0; transition: opacity .8s ease;
+    margin: 0; display: grid; justify-items: center; gap: 12px;
+    font-family: var(--mono); font-weight: 300; font-size: 11px; color: var(--dim);
+  }
+  .cue span { width: 1px; height: 44px; background: linear-gradient(var(--glow), transparent); transform-origin: top; animation: cue 2.4s ease-in-out infinite; }
+  @keyframes cue { 0% { transform: scaleY(0); opacity: 0; } 30% { opacity: 1; } 70% { transform: scaleY(1); opacity: .9; } 100% { transform: scaleY(1); opacity: 0; } }
 
-  /* ── Social links ── */
-  .socials {
-    display: flex;
-    gap: 1.8rem;
-    justify-content: center;
-    margin-top: 3rem;
-    opacity: 0;
-    transform: translateY(10px);
-    animation: fadeUp 1.4s 1.1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  /* outro */
+  .links { list-style: none; margin: 8px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 10px 22px; }
+  .links a {
+    font-family: var(--mono); font-weight: 300; font-size: 12.5px; color: var(--ink);
+    text-decoration: none; padding: 6px 0; border-bottom: 1px solid color-mix(in srgb, var(--glow) 55%, transparent);
   }
+  .links a:hover { color: var(--glow); border-bottom-color: var(--glow); }
 
-  .socials a {
-    color: var(--text-muted);
-    text-decoration: none;
-    font-family: 'Instrument Sans', sans-serif;
-    font-size: 0.72rem;
-    font-weight: 500;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    padding: 0.5rem 0;
-    position: relative;
-    transition: color 0.4s ease;
+  /* ---------- controls ---------- */
+  button { font: inherit; }
+  :focus-visible { outline: 2px solid var(--glow); outline-offset: 3px; border-radius: 4px; }
+  .btn {
+    font-family: var(--mono); font-weight: 400; font-size: 12px; letter-spacing: .02em;
+    color: var(--ink); background: transparent; cursor: pointer;
+    border: 1px solid color-mix(in srgb, var(--glow) 55%, transparent);
+    padding: 13px 20px; border-radius: 999px;
+    transition: background-color .25s, box-shadow .25s, border-color .25s;
   }
+  .btn:hover { background: color-mix(in srgb, var(--glow) 20%, transparent); border-color: var(--glow); }
+  .btn.primary {
+    background: color-mix(in srgb, var(--glow) 16%, transparent);
+    box-shadow: 0 0 26px color-mix(in srgb, var(--glow) 30%, transparent), inset 0 0 12px color-mix(in srgb, var(--glow) 18%, transparent);
+  }
+  .btn.ghost { justify-self: start; margin-top: 10px; }
 
-  .socials a::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 0;
-    height: 1px;
-    background: var(--accent);
-    transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  .hud {
+    position: fixed; z-index: 15; top: 0; left: 0; right: 0;
+    display: flex; justify-content: space-between; align-items: center;
+    padding-top: calc(env(safe-area-inset-top, 0px) + 12px); padding-bottom: 12px;
+    padding-left: max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
+    pointer-events: none; opacity: 0; transition: opacity 1.2s ease .4s;
   }
+  .hud.show, .ticks.show { opacity: 1; }
+  .hud button { pointer-events: auto; }
+  .mark {
+    background: none; border: 0; padding: 10px 0; cursor: pointer; color: var(--ink);
+    font-family: var(--display); font-weight: 300; font-size: 12px; letter-spacing: .24em;
+  }
+  .sound {
+    display: flex; gap: 9px; align-items: center; cursor: pointer;
+    font-family: var(--mono); font-weight: 300; font-size: 11px; color: var(--ink);
+    background: rgba(5, 6, 26, .38); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+    border: 1px solid color-mix(in srgb, var(--glow) 42%, transparent); border-radius: 999px;
+    padding: 9px 14px;
+  }
+  .bars { display: flex; gap: 2px; align-items: flex-end; height: 10px; }
+  .bars i { display: block; width: 2px; height: 3px; background: var(--glow); }
+  .sound[aria-pressed="true"] .bars i { animation: eq .9s ease-in-out infinite alternate; }
+  .sound[aria-pressed="true"] .bars i:nth-child(2) { animation-delay: .3s; }
+  .sound[aria-pressed="true"] .bars i:nth-child(3) { animation-delay: .6s; }
+  @keyframes eq { to { height: 10px; } }
 
-  .socials a:hover {
-    color: var(--text-primary);
+  .ticks {
+    position: fixed; z-index: 15; top: 50%; transform: translateY(-50%);
+    right: max(8px, calc(env(safe-area-inset-right, 0px) + 8px));
+    display: grid; gap: 2px; opacity: 0; transition: opacity 1.2s ease .6s;
   }
-  .socials a:hover::after {
-    width: 100%;
+  .tick {
+    appearance: none; background: none; border: 0; cursor: pointer;
+    min-width: 46px; padding: 9px 6px;
+    display: flex; align-items: center; justify-content: flex-end; gap: 8px;
+    font-family: var(--display); font-weight: 300; font-size: 10.5px; letter-spacing: .12em;
+    color: var(--dim); transition: color .4s;
   }
+  .tick::after { content: ""; width: 12px; height: 1px; background: currentColor; opacity: .6; transition: width .4s, opacity .4s; }
+  .tick.on { color: var(--glow); }
+  .tick.on::after { width: 24px; opacity: 1; }
 
-  /* ── Dot separator between links ── */
-  .dot {
-    color: var(--text-muted);
-    font-size: 0.5rem;
-    align-self: center;
-    opacity: 0.4;
+  /* ---------- boot ---------- */
+  #boot {
+    position: fixed; inset: 0; z-index: 30;
+    display: flex; align-items: flex-end;
+    padding-left: max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
+    padding-block: 0 calc(env(safe-area-inset-bottom, 0px) + 44px);
+    background: linear-gradient(to top, rgba(5, 6, 26, .94) 0%, rgba(5, 6, 26, .6) 40%, rgba(5, 6, 26, 0) 72%);
+    transition: opacity 1s ease;
   }
-
-  /* ── Bottom status ── */
-  .status {
-    position: fixed;
-    bottom: 2.5rem;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    align-items: center;
-    gap: 0.6rem;
-    opacity: 0;
-    animation: fadeUp 1.4s 1.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-    z-index: 10;
+  #boot.out { opacity: 0; pointer-events: none; }
+  .boot-inner { width: 100%; max-width: 27rem; display: grid; gap: 22px; }
+  .boot-log {
+    list-style: none; margin: 0; padding: 0; display: grid; gap: 9px;
+    font-family: var(--mono); font-weight: 300; font-size: 12px; color: var(--dim);
   }
+  .boot-log li { display: flex; gap: 10px; align-items: baseline; animation: type .5s steps(26, end) both; }
+  .boot-log li:nth-child(2) { animation-delay: .45s; }
+  .boot-log li:nth-child(3) { animation-delay: .9s; }
+  .boot-log .lead { flex: 1; border-bottom: 1px dotted var(--line); transform: translateY(-3px); }
+  .boot-log .st { color: var(--glow); }
+  @keyframes type { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
+  .boot-actions { display: flex; flex-wrap: wrap; gap: 10px; animation: rise .7s ease 1.25s both; }
+  @keyframes rise { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+  .boot-note { margin: 0; font-family: var(--mono); font-weight: 300; font-size: 10.5px; color: var(--dim); opacity: .8; }
 
-  .status-dot {
-    width: 5px;
-    height: 5px;
-    border-radius: 50%;
-    background: var(--chromatic-1);
-    animation: pulse 3s ease-in-out infinite;
+  @media (prefers-reduced-motion: reduce) {
+    .boot-log li, .boot-actions, .cue span { animation: none; }
+    .hud, .ticks, #boot { transition: none; }
   }
-
-  @keyframes pulse {
-    0%, 100% { opacity: 0.4; }
-    50% { opacity: 1; }
-  }
-
-  .status-text {
-    font-family: 'Instrument Sans', sans-serif;
-    font-size: 0.65rem;
-    font-weight: 500;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--text-muted);
-  }
-
-  @keyframes fadeUp {
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  /* ── Corner accents ── */
-  .corner {
-    position: fixed;
-    width: 20px;
-    height: 20px;
-    opacity: 0;
-    animation: fadeUp 1.4s 2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-    z-index: 10;
-  }
-  .corner svg { width: 100%; height: 100%; }
-  .corner-tl { top: 2rem; left: 2rem; }
-  .corner-tr { top: 2rem; right: 2rem; transform: rotate(90deg); }
-  .corner-bl { bottom: 2rem; left: 2rem; transform: rotate(-90deg); }
-  .corner-br { bottom: 2rem; right: 2rem; transform: rotate(180deg); }
-
-  /* ── Mobile ── */
-  @media (max-width: 600px) {
-    .socials { gap: 1.2rem; }
-    .socials a { font-size: 0.65rem; letter-spacing: 0.15em; }
-    .corner { display: none; }
-    .rule-top { top: 10%; }
-    .rule-bottom { bottom: 10%; }
-  }
-
-  /* ── Selection color ── */
-  ::selection {
-    background: var(--accent);
-    color: var(--bg);
+  @media (min-width: 900px) {
+    .stage { padding-left: max(56px, env(safe-area-inset-left, 0px)); }
+    #boot { padding-left: max(56px, env(safe-area-inset-left, 0px)); }
   }
 </style>
-</head>
-<body>
 
-  <!-- Ambient orbs -->
-  <div class="orb orb-1"></div>
-  <div class="orb orb-2"></div>
-  <div class="orb orb-3"></div>
+<canvas id="world" aria-hidden="true"></canvas>
+<div id="media" aria-hidden="true"></div>
+<div id="scrim" aria-hidden="true"></div>
 
-  <!-- Decorative rules -->
-  <div class="rule-top"></div>
-  <div class="rule-bottom"></div>
+<header class="hud" id="hud" hidden>
+  <button class="mark" id="toTop" type="button" aria-label="Back to the threshold">SURGALXY</button>
+  <button class="sound" id="soundBtn" type="button" aria-pressed="false">
+    <span class="bars" aria-hidden="true"><i></i><i></i><i></i></span>
+    <span id="soundLabel">Sound off</span>
+  </button>
+</header>
+<nav class="ticks" id="ticks" aria-label="Worlds" hidden></nav>
 
-  <!-- Corner accents -->
-  <div class="corner corner-tl">
-    <svg viewBox="0 0 20 20" fill="none"><path d="M0 20V0h20" stroke="#3d3a4d" stroke-width="0.5"/></svg>
+<main id="track">
+  <section class="chapter threshold" data-world="0" id="threshold" aria-label="Threshold">
+    <div class="stage">
+      <div class="card">
+        <h1 class="wordmark">SURGALXY</h1>
+        <p class="tagline">Ethereal Tech</p>
+      </div>
+      <p class="cue" aria-hidden="true"><span></span>Scroll to descend</p>
+    </div>
+  </section>
+
+  <!-- The five worlds are built from the WORLDS list in the script below. -->
+
+  <section class="chapter outro" data-world="6" id="new-worlds" aria-label="New worlds loading">
+    <div class="stage">
+      <div class="card">
+        <h2 class="title">New worlds loading</h2>
+        <p class="caption">Follow the signal between transmissions.</p>
+        <ul class="links">
+          <li><a href="https://instagram.com/surgalxy" target="_blank" rel="noopener">Instagram</a></li>
+          <li><a href="https://tiktok.com/@surgalxy" target="_blank" rel="noopener">TikTok</a></li>
+          <li><a href="https://youtube.com/@surgalxy" target="_blank" rel="noopener">YouTube</a></li>
+          <li><a href="https://x.com/surgalxy" target="_blank" rel="noopener">X</a></li>
+        </ul>
+        <button class="btn ghost" id="again" type="button">Return to the threshold</button>
+      </div>
+    </div>
+  </section>
+</main>
+
+<section id="boot" aria-label="Enter Surgalxy">
+  <div class="boot-inner">
+    <ol class="boot-log">
+      <li><span>Establishing link</span><b class="lead"></b><span class="st">ok</span></li>
+      <li><span>Calibrating light</span><b class="lead"></b><span class="st">ok</span></li>
+      <li><span>Worlds found</span><b class="lead"></b><span class="st">5</span></li>
+    </ol>
+    <div class="boot-actions">
+      <button class="btn primary" id="enterSound" type="button">Enter with sound</button>
+      <button class="btn" id="enterQuiet" type="button">Enter in silence</button>
+    </div>
+    <p class="boot-note">The sound is generated live as you move between worlds.</p>
   </div>
-  <div class="corner corner-tr">
-    <svg viewBox="0 0 20 20" fill="none"><path d="M0 20V0h20" stroke="#3d3a4d" stroke-width="0.5"/></svg>
-  </div>
-  <div class="corner corner-bl">
-    <svg viewBox="0 0 20 20" fill="none"><path d="M0 20V0h20" stroke="#3d3a4d" stroke-width="0.5"/></svg>
-  </div>
-  <div class="corner corner-br">
-    <svg viewBox="0 0 20 20" fill="none"><path d="M0 20V0h20" stroke="#3d3a4d" stroke-width="0.5"/></svg>
-  </div>
+</section>
 
-  <!-- Main content -->
-  <div class="container">
-    <h1 class="wordmark">SURGALXY</h1>
-    <p class="tagline">Ethereal Tech</p>
+<noscript><style>#boot{display:none}</style></noscript>
 
-    <nav class="socials">
-      <a href="https://instagram.com/surgalxy" target="_blank" rel="noopener">Instagram</a>
-      <span class="dot">●</span>
-      <a href="https://tiktok.com/@surgalxy" target="_blank" rel="noopener">TikTok</a>
-      <span class="dot">●</span>
-      <a href="https://youtube.com/@surgalxy" target="_blank" rel="noopener">YouTube</a>
-      <span class="dot">●</span>
-      <a href="https://x.com/surgalxy" target="_blank" rel="noopener">X</a>
-    </nav>
-  </div>
+<script id="fs" type="x-shader/x-fragment">
+precision highp float;
+uniform vec2 uRes;
+uniform float uTime, uA, uB, uMix, uPA, uPB, uBoot, uFlash, uMotion;
+uniform vec3 uFlashCol;
+#define PI 3.14159265
+#define TAU 6.2831853
+float AA;
 
-  <!-- Status indicator -->
-  <div class="status">
-    <div class="status-dot"></div>
-    <span class="status-text">New worlds loading</span>
-  </div>
+float h21(vec2 p){p=fract(p*vec2(233.34,851.73));p+=dot(p,p+23.45);return fract(p.x*p.y);}
+float h11(float n){return fract(sin(n*91.3458)*47453.5453);}
+float vnoise(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);
+  return mix(mix(h21(i),h21(i+vec2(1.,0.)),f.x),mix(h21(i+vec2(0.,1.)),h21(i+vec2(1.,1.)),f.x),f.y);}
+float fbm(vec2 p){float s=0.,a=.5;for(int i=0;i<5;i++){s+=a*vnoise(p);p=p*2.03+vec2(3.1,1.7);a*=.5;}return s;}
+float fbm3(vec2 p){float s=0.,a=.5;for(int i=0;i<3;i++){s+=a*vnoise(p);p=p*2.03+vec2(3.1,1.7);a*=.5;}return s;}
+float fill(float d,float aa){return smoothstep(aa,-aa,d);}
+mat2 rot(float a){float c=cos(a),s=sin(a);return mat2(c,-s,s,c);}
+float sdBox(vec2 p,vec2 b){vec2 d=abs(p)-b;return length(max(d,0.))+min(max(d.x,d.y),0.);}
+float sdEll(vec2 p,vec2 r){float k0=length(p/r);float k1=length(p/(r*r))+1e-5;return k0*(k0-1.)/k1;}
+float sdSeg(vec2 p,vec2 a,vec2 b){vec2 pa=p-a,ba=b-a;float h=clamp(dot(pa,ba)/dot(ba,ba),0.,1.);return length(pa-ba*h);}
+float sdTrap(vec2 p,float r1,float r2,float he){
+  vec2 k1=vec2(r2,he),k2=vec2(r2-r1,2.*he);p.x=abs(p.x);
+  vec2 ca=vec2(p.x-min(p.x,(p.y<0.)?r1:r2),abs(p.y)-he);
+  vec2 cb=p-k1+k2*clamp(dot(k1-p,k2)/dot(k2,k2),0.,1.);
+  float s=(cb.x<0.&&ca.y<0.)?-1.:1.;
+  return s*sqrt(min(dot(ca,ca),dot(cb,cb)));}
+float smin(float a,float b,float k){float h=clamp(.5+.5*(b-a)/k,0.,1.);return mix(b,a,h)-k*h*(1.-h);}
+float sdVesica(vec2 p,float r,float d){p=abs(p);float b=sqrt(r*r-d*d);
+  return ((p.y-b)*d>p.x*b)?length(p-vec2(0.,b)):length(p-vec2(-d,0.))-r;}
 
-</body>
-</html>
+float stars(vec2 p,float sc,float th){
+  vec2 g=p*sc;vec2 i=floor(g);vec2 f=fract(g)-.5;
+  float n=h21(i);
+  if(n<th)return 0.;
+  vec2 o=vec2(h21(i+3.7),h21(i+9.1))-.5;
+  float d=length(f-o*.6);
+  float tw=.65+.35*sin(uTime*(.8+n*3.)+n*50.);
+  return smoothstep(.16,.0,d)*tw*(.4+.6*(n-th)/(1.-th));
+}
+
+/* hooded robed figure: feet at y=0, crown near y=.93 */
+float sdRobed(vec2 q){
+  float robe=sdTrap(q-vec2(0.,.34),.21,.10,.34);
+  float sh=sdEll(q-vec2(0.,.66),vec2(.15,.075));
+  float hood=sdEll(q-vec2(0.,.80),vec2(.10,.13));
+  return smin(smin(robe,sh,.05),hood,.04);
+}
+
+/* ---------- 0 / 6 : the threshold ring ---------- */
+vec3 sceneThreshold(vec2 p,float pr,float outro){
+  vec3 col=vec3(.010,.012,.040);
+  col+=mix(vec3(.25,.07,.45),vec3(.02,.32,.42),fbm3(p*2.6+4.))*pow(fbm(p*2.2+vec2(uTime*.006,-uTime*.004)),2.6)*.75;
+  col+=vec3(.75,.82,1.)*(stars(p,85.,.88)+stars(p+7.3,150.,.9)*.6);
+  float boot=uBoot;
+  float fall=(1.-outro)*pow(pr,2.4);
+  vec2 c=vec2(0.,.03);
+  float R=mix(.16,.11,outro)*(1.+fall*9.);
+  vec2 d=p-c; float l=length(d); float a=atan(d.y,d.x);
+  float k1=mix(140.,260.,boot)/(1.+fall*4.);
+  float k2=16./(1.+fall*2.);
+  float rr=abs(l-R*.975),rg=abs(l-R),rb=abs(l-R*1.025);
+  vec3 ring=vec3(exp(-rr*k1)*1.3+exp(-rr*k2)*.16,exp(-rg*k1)*1.3+exp(-rg*k2)*.16,exp(-rb*k1)*1.5+exp(-rb*k2)*.2);
+  ring*=vec3(.85,1.,1.1);
+  float pulse=.9+.1*sin(uTime*1.3);
+  col+=ring*(.18+.82*boot)*pulse*mix(1.,.6,outro);
+  float sr=abs(l-R*1.3);
+  float seg=step(.42,fract(a*48./TAU+uTime*.012));
+  float amt=outro>.5?fract(uTime*.06):1.;
+  float sweep=step(fract((-a+PI*.5)/TAU),amt);
+  col+=vec3(.7,.92,1.)*exp(-sr*420.)*seg*sweep*.6*boot;
+  col+=vec3(.45,.65,1.)*.07*smoothstep(R,0.,l)*boot;
+  col+=vec3(.7,.85,1.)*exp(-abs(p.x)*380.)*.16*boot*(1.-smoothstep(.0,.6,abs(p.y-c.y)));
+  col+=vec3(.75,.88,1.)*smoothstep(R*.9,0.,l)*fall*.3;
+  return col;
+}
+
+/* ---------- 1 : Crimson Masks ---------- */
+vec3 sceneMasks(vec2 p,float pr){
+  float t=uTime;
+  vec3 ICE=vec3(.55,.88,1.);
+  vec3 VER=vec3(.86,.10,.06);
+  p*=1.-pr*.10;
+  p.x+=pr*.025;
+  float hz=.07;
+  vec3 col=mix(vec3(.13,.20,.23),vec3(.03,.05,.08),smoothstep(hz,.55,p.y));
+  col+=ICE*.28*exp(-abs(p.y-hz)*13.);
+  float fg=fbm3(vec2(p.x*2.5+t*.015,p.y*5.));
+  col=mix(col,vec3(.30,.42,.47),fg*.3*smoothstep(.4,hz,p.y));
+  {
+    float S=.42; vec2 q=(p-vec2(.11,hz-.004))/S; float aL=AA/S;
+    float ig=smoothstep(.62,.80,pr);
+    float hr=abs(length(q-vec2(0.,.81))-.21);
+    col+=ICE*(exp(-hr*200.)*.5+exp(-hr*22.)*.05)*(.25+.75*ig);
+    float d=sdRobed(q);
+    if(d<.05){
+      vec3 cc=mix(vec3(.25,.33,.37),vec3(.13,.19,.23),smoothstep(.0,.9,q.y));
+      vec2 wg=q*vec2(46.,38.);vec2 wi=floor(wg),wf=fract(wg)-.5;
+      float lit=step(.80,h21(wi+5.))*step(q.y,.62);
+      cc+=mix(ICE,VER*1.5,step(.62,h21(wi+9.)))*lit*fill(sdBox(wf,vec2(.25,.2)),.15)*.32;
+      cc+=ICE*exp(-abs(q.x)*70.)*step(q.y,.66)*.30*(.3+.7*ig);
+      float m=sdEll(q-vec2(0.,.80),vec2(.058,.082));
+      cc=mix(cc,vec3(.45,.52,.56),fill(m,aL));
+      col=mix(col,cc,fill(d,aL)*.94);
+    }
+    float sl=sdSeg(q,vec2(0.,.76),vec2(0.,.85));
+    col+=ICE*ig*(exp(-sl*260.)*.9+exp(-sl*22.)*.10);
+  }
+  if(p.y<hz){
+    float z=.12/(hz-p.y);
+    vec2 w=vec2(p.x*z,z+pr*.55);
+    float n1=abs(vnoise(w*vec2(3.,2.2))-.5);
+    float n2=abs(vnoise(w*vec2(9.,7.)+7.)-.5);
+    float n3=abs(vnoise(w*vec2(22.,17.)+3.)-.5);
+    float fade=exp(-z*.18);
+    float lines=(exp(-n1*90.)*.45+exp(-n2*70.)*.6+exp(-n3*60.)*.35*exp(-z*.6))*fade;
+    vec3 fl=mix(vec3(.06,.16,.21),vec3(.16,.34,.43),fbm3(w*1.5));
+    fl+=ICE*lines*.75;
+    fl+=ICE*.18*exp(-abs(p.x+.08)*5.)*fade;
+    fl=mix(fl,vec3(.30,.48,.56),1.-exp(-z*.10));
+    col=fl;
+  }
+  for(int k=0;k<9;k++){
+    float i=8.-float(k);
+    float Z=1.05+i*.82-pr*.5;
+    float s=1./Z;
+    vec2 base=vec2(-.15*s,hz-.12*s);
+    float H=.46*s;
+    vec2 q=(p-base)/H;
+    float aL=AA/H;
+    float fogk=1.-exp(-Z*.20);
+    float ig=smoothstep(.04+i*.06,.14+i*.06,pr);
+    float hr=abs(length(q-vec2(0.,.81))-.20);
+    col+=ICE*ig*(exp(-hr*170.)*.9+exp(-hr*24.)*.07)*(1.-fogk*.6);
+    float d=sdRobed(q);
+    if(d<.05){
+      float fold=.72+.28*sin(q.x*55.+sin(q.y*8.+i*1.7)*2.2);
+      vec3 c=VER*(.30+.55*fold);
+      c*=mix(1.,.6,smoothstep(.56,.92,q.y));
+      c+=ICE*.30*smoothstep(.22,.0,q.y);
+      c+=ICE*.40*smoothstep(-.03,0.,d);
+      float m=sdEll(q-vec2(0.,.80),vec2(.058,.082));
+      vec3 mc=vec3(.86,.88,.90)*(.45+.55*smoothstep(.07,-.05,q.x))+ICE*.12;
+      c=mix(c,mc,fill(m,aL));
+      float sl=sdSeg(q,vec2(0.,.755),vec2(0.,.848));
+      c=mix(c,vec3(.04,.05,.07),fill(sl-.007,aL)*(1.-ig*.9));
+      c=mix(c,vec3(.30,.46,.53),fogk);
+      col=mix(col,c,fill(d,aL));
+      col+=ICE*ig*(exp(-sl*420.)*1.6+exp(-sl*55.)*.22)*(1.-fogk*.5);
+    }
+  }
+  for(int L=0;L<2;L++){
+    float fl=float(L);
+    vec2 g=p*(16.+fl*12.)+vec2(t*(.12+fl*.08),t*(.45+fl*.3));
+    vec2 id=floor(g),f=fract(g)-.5;
+    float h=h21(id+fl*7.);
+    if(h>.86){vec2 o=vec2(h21(id+3.),h21(id+9.))-.5;col+=vec3(.8,.93,1.)*smoothstep(.09,.0,length(f-o*.7))*.55*(h-.86)/.14;}
+  }
+  return col;
+}
+
+/* ---------- 2 : Colossus Valley ---------- */
+float dune(float x,float base,float amp,float fr,float sd){
+  float n=fbm3(vec2(x*fr+sd,sd*1.3));
+  float sharp=1.-abs(sin(x*fr*1.7+n*3.+sd));
+  return base+amp*(n-.5)+amp*.35*sharp;
+}
+/* cloaked titan: feet at y=0, crown near y=1 */
+float sdTitan(vec2 q,float ph,float kind){
+  float sw=sin(ph);
+  float hem=.25+.05*vnoise(vec2(q.x*22.+kind*7.,kind));
+  float robe=max(sdTrap(q-vec2(0.,.53),.19,.12,.27),hem-q.y);
+  vec2 fL=vec2(-.06+sw*.07,max(0.,-cos(ph))*.03),fR=vec2(.06-sw*.07,max(0.,cos(ph))*.03);
+  float legs=min(sdSeg(q,vec2(-.055,.34),fL),sdSeg(q,vec2(.055,.34),fR))-.042;
+  float d=min(robe,legs);
+  d=smin(d,sdEll(q-vec2(0.,.78),vec2(.22,.075)),.04);
+  vec2 hL=vec2(-.25-sw*.03,.36),hR=vec2(.25+sw*.03,.36);
+  d=min(d,sdSeg(q,vec2(-.18,.76),hL)-.036);
+  d=min(d,sdSeg(q,vec2(.18,.76),hR)-.036);
+  if(kind<.5){
+    d=smin(d,sdEll(q-vec2(0.,.87),vec2(.055,.065)),.03);
+    vec2 qq=vec2(abs(q.x),q.y);
+    float horn=min(sdSeg(qq,vec2(.04,.90),vec2(.15,.96)),sdSeg(qq,vec2(.15,.96),vec2(.19,1.07)));
+    d=min(d,horn-mix(.022,.008,clamp((qq.x-.04)/.15,0.,1.)));
+  } else if(kind<1.5){
+    d=smin(d,sdEll(q-vec2(0.,.86),vec2(.075,.085)),.03);
+    d=smin(d,sdEll(q-vec2(0.,.80),vec2(.26,.07)),.05);
+  } else {
+    d=smin(d,sdTrap(q-vec2(0.,.89),.075,.012,.09),.02);
+    d=min(d,sdSeg(q,hR,vec2(.30,1.00))-.012);
+  }
+  return d;
+}
+vec3 drawColossus(vec3 col,vec2 p,vec2 base,float H,vec3 c,vec3 haze,float kind,float ph,float ig,vec3 eye){
+  vec2 q=(p-base)/H; float aL=AA/H;
+  if(kind>.5&&kind<1.5){
+    vec2 rq=q-vec2(0.,.82);
+    float rl=length(rq);
+    float a=atan(rq.y,rq.x);
+    col=mix(col,c*1.05,fill(abs(rl-.27)-.010,aL));
+    col=mix(col,c*1.05,fill(sdSeg(q,vec2(-.20,.75),vec2(.20,.75))-.012,aL));
+    col+=eye*ig*(exp(-abs(rl-.27)*80.)*.25+exp(-abs(rl-.27)*380.)*step(.62,fract(a*16./TAU-uTime*.02))*.9);
+  }
+  float d=sdTitan(q,ph,kind);
+  if(d<.1){
+    vec3 cc=c*(.90+.18*fbm3(q*vec2(10.,22.)));
+    cc=mix(cc,haze,smoothstep(.45,.0,q.y)*.55);
+    cc*=1.-.12*smoothstep(.6,.85,q.y)*step(abs(q.x),.2);
+    float sm=abs(fract(q.y*7.+fbm3(q*5.)*.5)-.5);
+    cc+=eye*ig*smoothstep(.035,.0,sm)*.20*step(.30,q.y)*step(q.y,.74);
+    col=mix(col,cc,fill(d,aL));
+  }
+  vec2 e=q-vec2(0.,kind>1.5?.87:.875);
+  float ed=length(vec2(abs(e.x)-.022,e.y*1.9))-.0085;
+  col+=eye*ig*(fill(ed,aL)*1.7+exp(-max(ed,0.)*55.)*.45);
+  col+=eye*ig*exp(-length(q-vec2(0.,.66))*36.)*.5;
+  if(kind>1.5){float ld=length(q-vec2(.30,.975));col+=vec3(1.,.82,.55)*(exp(-ld*45.)*.9+exp(-ld*7.)*.12)*(.85+.15*sin(uTime*6.3));}
+  return col;
+}
+float dustAt(vec2 p,vec2 base,float H,float t){
+  vec2 q=(p-base)/H;
+  return fbm3(q*vec2(5.,9.)+vec2(t*.08,0.))*exp(-max(q.y,0.)*6.)*smoothstep(.6,.2,abs(q.x));
+}
+vec3 sceneValley(vec2 p,float pr){
+  float t=uTime;
+  vec3 EYE=vec3(.30,1.,.92);
+  p+=vec2(vnoise(vec2(t*.9,1.))-.5,vnoise(vec2(3.,t*.8))-.5)*.008*uMotion;
+  float cx=pr*.16;
+  vec3 col=mix(vec3(1.,.64,.34),vec3(.22,.10,.34),smoothstep(-.06,.55,p.y));
+  float sdn=length(p-vec2(.30-cx*.1,.03));
+  col+=vec3(1.,.78,.5)*(exp(-sdn*5.)*.45+exp(-sdn*28.)*.7);
+  vec2 pp=p-vec2(-.14-cx*.15,.35);
+  float pd=length(pp)-.075;
+  vec3 pc=mix(vec3(.98,.84,.78),vec3(.42,.28,.50),smoothstep(-.08,.10,pp.x*.8+pp.y*.6));
+  pc*=.86+.14*fbm3(pp*vec2(10.,40.));
+  col=mix(col,mix(pc,col,.30),fill(pd,AA));
+  vec2 rp=rot(.32)*pp;
+  float rr=abs(length(rp*vec2(1.,3.4))-.145);
+  float front=(rp.y<0.||pd>0.)?1.:0.;
+  col+=vec3(1.,.86,.76)*(exp(-rr*120.)*.45+exp(-rr*30.)*.06)*front;
+  col+=vec3(1.)*stars(p,90.,.94)*.35*smoothstep(.25,.5,p.y);
+  col=mix(col,vec3(1.,.70,.46),fbm3(vec2(p.x*2.-t*.04,p.y*9.))*.16);
+  float ph=t*.55*uMotion+pr*3.;
+  float y1=dune(p.x+cx*.15,-.01,.06,2.2,1.);
+  if(p.y<y1) col=mix(vec3(.96,.62,.40),vec3(.90,.52,.33),smoothstep(y1,y1-.1,p.y));
+  vec2 bA=vec2(.075-cx*.25,-.03);
+  col=drawColossus(col,p,bA,.44,vec3(.82,.55,.42),vec3(.98,.70,.50),0.,ph,smoothstep(.50,.66,pr),EYE);
+  col=mix(col,vec3(.98,.70,.48),dustAt(p,bA,.44,t)*.55);
+  float x2=p.x+cx*.35;
+  float y2=dune(x2,-.09,.07,3.,4.);
+  if(p.y<y2){vec3 dc=mix(vec3(.88,.47,.25),vec3(.70,.33,.17),smoothstep(y2,y2-.12,p.y));dc*=.92+.08*sin((p.y-y2)*150.+fbm3(vec2(x2*8.,p.y*20.))*6.);col=dc;}
+  vec2 bB=vec2(-.105-cx*.5,-.115);
+  col=drawColossus(col,p,bB,.32,vec3(.60,.32,.20),vec3(.90,.55,.33),1.,ph+1.7,smoothstep(.30,.46,pr),EYE);
+  col=mix(col,vec3(.92,.58,.36),dustAt(p,bB,.32,t)*.5);
+  float x3=p.x+cx*.6;
+  float y3=dune(x3,-.19,.08,3.6,9.);
+  if(p.y<y3){vec3 dc=mix(vec3(.66,.29,.14),vec3(.45,.18,.08),smoothstep(y3,y3-.14,p.y));dc*=.92+.08*sin((p.y-y3)*170.+fbm3(vec2(x3*9.,p.y*22.))*6.);col=dc;}
+  vec2 bC=vec2(.115-cx*.9,-.215);
+  col=drawColossus(col,p,bC,.22,vec3(.38,.16,.09),vec3(.66,.30,.15),2.,ph+3.1,smoothstep(.12,.26,pr),EYE);
+  col=mix(col,vec3(.80,.45,.25),dustAt(p,bC,.22,t)*.45);
+  float y4=dune(p.x+cx*1.1,-.31,.06,2.6,13.);
+  if(p.y<y4){col=mix(vec3(.30,.11,.05),vec3(.12,.04,.02),smoothstep(y4,y4-.2,p.y));col+=vec3(1.,.6,.3)*.18*smoothstep(y4-.012,y4,p.y);}
+  for(int k=0;k<8;k++){
+    float fk=float(k);
+    float xk=-.36+fk*.095-pr*.06;
+    float sx=xk-cx*1.1;
+    if(abs(p.x-sx)>.06)continue;
+    float cy=dune(xk,-.31,.06,2.6,13.);
+    float bob=abs(sin(t*2.2+fk*1.3))*.002*uMotion;
+    vec2 q=p-vec2(sx,cy+bob-.002);
+    if(q.y<-.01||q.y>.11)continue;
+    float d;
+    if(mod(fk,3.)<.5){
+      vec2 b=q/.075;
+      float leg=sin(t*2.2*uMotion+fk)*.07;
+      float body=sdEll(b-vec2(0.,1.05),vec2(.30,.12));
+      float hump=sdEll(b-vec2(-.03,1.16),vec2(.17,.10));
+      float neck=sdSeg(b,vec2(.22,1.06),vec2(.36,.97))-.035;
+      float head=sdEll(b-vec2(.40,.96),vec2(.07,.04));
+      float legs=min(min(sdSeg(b,vec2(-.20,1.0),vec2(-.27+leg,0.)),sdSeg(b,vec2(-.12,1.0),vec2(-.07-leg,0.))),min(sdSeg(b,vec2(.12,1.0),vec2(.07+leg,0.)),sdSeg(b,vec2(.20,1.0),vec2(.27-leg,0.))))-.016;
+      float rider=sdRobed((b-vec2(-.03,1.20))/.24)*.24;
+      d=min(min(min(body,hump),min(neck,head)),min(legs,rider))*.075;
+      col=mix(col,vec3(.07,.025,.015),fill(d,AA));
+      float ll=length(q-vec2(0.,.075*.86));
+      col+=vec3(1.,.78,.45)*(exp(-ll*800.)*1.1+exp(-ll*120.)*.16)*(.8+.2*sin(t*6.+fk));
+    } else {
+      d=sdRobed(q/.034)*.034;
+      col=mix(col,vec3(.07,.025,.015),fill(d,AA));
+      float ll=length(q-vec2(.010,.014));
+      col+=vec3(1.,.78,.45)*(exp(-ll*900.)*1.2+exp(-ll*160.)*.18)*(.8+.2*sin(t*8.+fk));
+    }
+  }
+  col=mix(col,vec3(1.,.72,.48),fbm3(vec2(p.x*3.+t*.22,p.y*14.))*.14*smoothstep(-.05,-.45,p.y));
+  return col;
+}
+
+/* ---------- 3 : The Pilgrimage ---------- */
+vec3 scenePilgrimage(vec2 p0,float pr){
+  float t=uTime;
+  vec3 GOLD=vec3(1.,.76,.24);
+  vec3 WH=vec3(1.,.96,.90);
+  vec2 c=vec2(0.,.12);
+  float z=1.+pr*.40;
+  vec2 p=(p0-c)/z+c; float aa=AA/z;
+  float hz=-.02;
+  vec3 col=mix(vec3(.46,.24,.38),vec3(.05,.04,.15),smoothstep(hz,.40,p.y));
+  col+=vec3(.9,.9,1.)*stars(p,95.,.9)*.55*smoothstep(.10,.30,p.y);
+  {vec2 m=p-vec2(-.085,.29);float md=length(m)-.020;float mc=length(m-vec2(.008,.005))-.018;
+   col=mix(col,vec3(.95,.92,.85),fill(max(md,-mc),aa));col+=vec3(.9,.85,.8)*exp(-max(md,0.)*60.)*.12;}
+  {vec2 m=p-vec2(.095,.25);float md=length(m)-.010;float mc=length(m-vec2(-.0045,.003))-.009;
+   col=mix(col,vec3(.95,.92,.85),fill(max(md,-mc),aa)*.9);}
+  float drop=mix(.40,hz+.01,smoothstep(.02,.36,pr));
+  float cw=abs(p.x);
+  float on=smoothstep(drop-.02,drop+.06,p.y)*smoothstep(.0,.06,pr);
+  col+=(WH*(exp(-cw*300.)*1.4+exp(-cw*45.)*.30)+GOLD*exp(-cw*10.)*.10)*on;
+  float land=smoothstep(.30,.38,pr);
+  col+=WH*exp(-length((p-vec2(0.,hz))*vec2(1.,3.))*28.)*land*.6;
+  if(p.y<hz){
+    float zz=.08/(hz-p.y);
+    float X=p.x*zz;
+    float rip=vnoise(vec2(X*30.,zz*6.+t*.25));
+    vec3 g=vec3(.05,.04,.09)+vec3(.14,.09,.12)*exp(-(hz-p.y)*14.);
+    g+=WH*.30*exp(-abs(p.x+(rip-.5)*.012)*70.)*land*smoothstep(-.35,hz,p.y);
+    g+=GOLD*.10*exp(-abs(p.x)*6.)*smoothstep(-.3,hz,p.y);
+    vec3 cc=mix(vec3(.24,.18,.13),vec3(.62,.48,.26),exp(-(hz-p.y)*8.))*(.85+.15*vnoise(vec2(X*90.,zz*30.)));
+    cc+=WH*.18*exp(-abs(X)*60.)*land;
+    g=mix(g,cc,fill(abs(X)-.032,AA*zz));
+    col=g;
+  }
+  for(int m=0;m<12;m++){
+    float zm=.45+float(m)*.42;
+    float ym=hz-.08/zm;
+    float xm=.036/zm;
+    float r=.0035/sqrt(zm);
+    float dl=min(length(p-vec2(xm,ym+r*2.)),length(p-vec2(-xm,ym+r*2.)));
+    col+=GOLD*(exp(-dl/r*1.6)*1.1+exp(-dl/r*.25)*.05);
+  }
+  {
+    float H=.30; vec2 q=(p-vec2(0.,hz))/H; float aL=aa/H;
+    float ig=smoothstep(.36,.55,pr);
+    float hr=abs(length(q-vec2(0.,.82))-.21);
+    col+=GOLD*(exp(-hr*160.)*1.1+exp(-hr*20.)*.12)*(.15+.85*ig);
+    float d=sdRobed(q);
+    if(d<.05){
+      vec3 sc=vec3(.21,.17,.21);
+      vec2 wg=q*vec2(64.,52.);
+      vec2 wi=floor(wg),wf=fract(wg)-.5;
+      float hh=h21(wi);
+      float lv=pr*1.25-.12;
+      float lit=step(.52,hh)*smoothstep(lv+.02,lv-.04,q.y);
+      sc+=GOLD*lit*fill(sdBox(wf,vec2(.26,.20)),.12)*(.75+.25*sin(t*1.7+hh*40.));
+      sc*=.88+.12*step(.5,fract(q.y*13.));
+      float f=sdEll(q-vec2(0.,.80),vec2(.060,.085));
+      sc=mix(sc,vec3(.90,.86,.80)*(.55+.45*ig),fill(f,aL));
+      sc=mix(sc,vec3(.40,.33,.40),.30);
+      sc+=WH*.5*smoothstep(-.02,0.,d)*on;
+      col=mix(col,sc,fill(d,aL));
+    }
+  }
+  for(int k=0;k<14;k++){
+    float fn=13.-float(k);
+    float zn=.55+fn*.30+pr*.25;
+    float X=(h11(fn+1.)-.5)*.045;
+    vec2 b=vec2(X/zn,hz-.08/zn);
+    float Hn=.020/zn;
+    vec2 q=(p-b)/Hn;
+    float d=sdRobed(q);
+    float f=fill(d,aa/Hn);
+    col=mix(col,vec3(.05,.035,.04),f);
+    col+=GOLD*.5*smoothstep(-.06,0.,d)*step(.55,q.y)*f;
+  }
+  {
+    float za=1.+pr*.60;
+    vec2 pa=(p0-c)/za+c; float aA=AA/za;
+    float dOpen=min(sdBox(pa-vec2(0.,.05),vec2(.17,.15)),length(pa-vec2(0.,.20))-.17);
+    float dA=max(sdBox(pa-vec2(0.,.30),vec2(1.2,.80)),-dOpen);
+    dA=max(dA,-(pa.y+.075));
+    if(dA<.02){
+      vec3 ac=vec3(.11,.085,.12);
+      ac*=.82+.18*step(.5,fract(pa.y*42.));
+      vec2 g=pa*vec2(105.,80.);vec2 gi=floor(g),gf=fract(g)-.5;
+      float hh=h21(gi+31.);
+      ac+=GOLD*step(.86,hh)*fill(sdBox(gf,vec2(.22,.28)),.12)*(.6+.4*sin(t*1.3+hh*60.))*.9;
+      vec2 sg=pa*vec2(9.,7.);vec2 si=floor(sg),sf=fract(sg)-.5;float shh=h21(si+77.);
+      float scan=.75+.25*sin(sf.y*60.+t*4.);
+      ac+=vec3(.45,.68,1.)*step(.92,shh)*fill(sdBox(sf,vec2(.28,.20)),.03)*.14*scan*(.4+.6*smoothstep(.3,-.2,sf.y));
+      ac+=WH*exp(-dOpen*90.)*.45*(.3+.7*on)+GOLD*exp(-dOpen*18.)*.18;
+      col=mix(col,ac,fill(dA,aA));
+    }
+  }
+  {
+    float zf=1.+pr*1.1;
+    vec2 pf=(p0-vec2(0.,-.5))/zf+vec2(0.,-.5);
+    float aF=AA/zf;
+    for(int r=0;r<2;r++){
+      float fr=1.-float(r);
+      float w=.06-fr*.02;
+      float yb=-.51+fr*.045;
+      float id0=floor((pf.x+fr*.31)/w);
+      float dmin=1e5,hy=0.;
+      for(int j=-1;j<=1;j++){
+        float id=id0+float(j);
+        float hh=h11(id*1.7+fr*13.);
+        float cxh=(id+.5+(hh-.5)*.45)*w-fr*.31;
+        float hcy=yb+w*(.95+hh*.35);
+        float head=sdEll(pf-vec2(cxh,hcy),vec2(w*.23,w*.32));
+        float sh=sdEll(pf-vec2(cxh,yb),vec2(w*.48,w*.55));
+        float dd=smin(head,sh,w*.12);
+        if(dd<dmin){dmin=dd;hy=hcy;}
+      }
+      vec3 fc=mix(vec3(.015,.012,.03),vec3(.05,.035,.07),fr);
+      float f=fill(dmin,aF);
+      col=mix(col,fc,f);
+      col+=GOLD*.35*smoothstep(-.005,0.,dmin)*f*smoothstep(hy,hy+w*.2,pf.y);
+    }
+  }
+  return col;
+}
+
+/* ---------- 4 : The Hollow World ---------- */
+vec3 sceneHollow(vec2 p,float pr){
+  float t=uTime;
+  vec3 MINT=vec3(.50,1.,.84);
+  vec3 MAG=vec3(1.,.30,.85);
+  vec3 TQ=vec3(.20,1.,.92);
+  vec2 w=p+vec2(0.,pr*.20);
+  w*=1.-pr*.08;
+  float hz=-.06;
+  float ig=smoothstep(.04,.40,pr);
+  vec3 col=mix(vec3(.36,.88,.76),vec3(.02,.17,.20),smoothstep(-.02,.58,w.y));
+  float up=smoothstep(.10,.55,w.y);
+  vec2 lw=vec2(w.x*2.2/(.25+w.y),1.2/(w.y+.08));
+  float ld=fbm3(lw*vec2(4.,2.5));
+  vec3 lc=mix(vec3(.04,.24,.22),vec3(.18,.46,.32),ld);
+  vec2 cg=lw*vec2(55.,30.);
+  float ch=h21(floor(cg));
+  lc+=vec3(1.,.82,.52)*step(.94,ch)*smoothstep(.4,.1,length(fract(cg)-.5))*smoothstep(.42,.60,ld)*1.1;
+  lc+=TQ*exp(-abs(vnoise(lw*vec2(2.,1.2)+3.)-.5)*60.)*.45;
+  col=mix(col,lc,up*.78);
+  col+=MINT*exp(-abs(w.y-.04)*9.)*.22;
+  vec2 rq=w-vec2(0.,.25); rq.y*=1.18;
+  float rl=length(rq); float R=.19;
+  float ang=atan(rq.y,rq.x);
+  float inner=smoothstep(R,R-.10,rl);
+  col=mix(col,mix(col,vec3(.62,1.,.90),.35),inner);
+  col+=MAG*.10*inner*ig;
+  float band=abs(rl-R)-.0075;
+  vec3 rcol=vec3(.03,.09,.10)*(.8+.2*step(.5,fract(ang*48./TAU)));
+  col=mix(col,rcol,fill(band,AA));
+  col+=MAG*exp(-abs(rl-(R-.009))*900.)*(.45+.9*ig)*(.55+.45*step(.35,fract(ang*24./TAU+t*.015)));
+  col+=MINT*exp(-abs(rl-(R+.009))*900.)*.55;
+  col+=MAG*exp(-abs(rl-R)*40.)*.10*ig+MINT*exp(-abs(rl-R)*30.)*.06;
+  float nodes=step(.93,fract(ang*12./TAU));
+  col+=vec3(1.)*nodes*exp(-abs(rl-R)*500.)*.6;
+  float cl=smoothstep(.52,.80,fbm(vec2(w.x*2.4+t*.012,w.y*5.5-1.)))*smoothstep(-.02,.06,w.y)*smoothstep(.45,.15,w.y);
+  col=mix(col,vec3(.55,.92,.84)+MAG*.45*exp(-abs(w.x)*7.)*ig,cl*.5);
+  float cxw=abs(w.x+sin(w.y*20.+t)*.0006);
+  float colY=smoothstep(hz-.01,hz+.03,w.y);
+  float flare=1.+smoothstep(.70,.86,pr)*1.2;
+  col+=(vec3(1.)*exp(-cxw*520.)*1.3+MAG*(exp(-cxw*85.)*.55+exp(-cxw*16.)*.14))*colY*ig*flare;
+  {
+    vec2 g=vec2(w.x*70.,w.y*26.-t*1.4);vec2 id=floor(g),f=fract(g)-.5;float h=h21(id);
+    col+=mix(MAG,vec3(1.),.4)*step(.80,h)*smoothstep(.18,.0,length(f-(vec2(h21(id+5.),h21(id+8.))-.5)*.6))*exp(-abs(w.x)*25.)*ig*.9*colY;
+  }
+  {
+    float bw=.014;
+    float bi=floor(w.x/bw);
+    float bh=h11(bi*3.1);
+    float span=smoothstep(.16,.02,abs(w.x));
+    float top=hz+.006+bh*bh*.085*span;
+    float cxl=abs(fract(w.x/bw)-.5);
+    float halfw=.30*(1.-.75*smoothstep(top-.02,top,w.y));
+    if(w.y<top&&w.y>hz-.02&&cxl<halfw&&bh>.25){
+      vec3 bc=vec3(.12,.30,.31);
+      vec2 wi=vec2(bi,floor(w.y/.006));
+      bc+=mix(MINT,vec3(1.,.85,.65),step(.5,h21(wi+4.)))*step(.84,h21(wi))*.55;
+      bc+=MAG*.4*exp(-abs(w.x)*30.)*ig*smoothstep(top-.01,top,w.y);
+      col=bc;
+    }
+  }
+  if(w.y<hz){
+    float zz=.05/(hz-w.y);
+    float X=w.x*zz;
+    vec3 g=mix(vec3(.04,.12,.12),vec3(.22,.52,.47),exp(-(hz-w.y)*9.));
+    g*=.85+.15*fbm3(vec2(X*14.,zz*3.));
+    float xr=.16*sin(zz*1.9+.7)/(1.+zz*.45);
+    float rd2=abs(X-xr)-.03;
+    g=mix(g,TQ*1.1+vec3(.2),fill(rd2,AA*zz*1.5)*.9);
+    g+=TQ*exp(-max(rd2,0.)/zz*60.)*.35;
+    g+=MAG*.15*exp(-abs(w.x)*20.)*ig*exp(-(hz-w.y)*6.);
+    col=g;
+  }
+  {
+    float yr=hz-.012+.06*smoothstep(.06,.32,abs(w.x))*(.6+.6*fbm3(vec2(w.x*6.+2.,.5)));
+    col=mix(col,vec3(.22,.38,.38),fill(w.y-yr,AA)*smoothstep(.04,.10,abs(w.x)));
+  }
+  float yh=-.30+.07*exp(-(w.x+.07)*(w.x+.07)*30.)+.02*fbm3(vec2(w.x*9.,1.))-.04*w.x*w.x;
+  {
+    vec3 hc=vec3(.035,.07,.075)+MINT*.35*smoothstep(yh-.012,yh,w.y);
+    col=mix(col,hc,fill(w.y-yh,AA));
+  }
+  {
+    float tx=-.07;
+    float ty=-.30+.07+.02*fbm3(vec2(tx*9.,1.))-.04*tx*tx;
+    vec2 q=(w-vec2(tx,ty-.002))/.05;
+    col=mix(col,vec3(.02,.04,.05),fill(sdRobed(q),AA/.05));
+    float ll=length(w-vec2(tx+.010,ty+.021));
+    float lf=.85+.15*sin(t*7.)*sin(t*3.1);
+    col+=vec3(1.,.72,.38)*(exp(-ll*700.)*1.4+exp(-ll*90.)*.22)*lf;
+  }
+  return col;
+}
+
+/* ---------- 5 : Godhead ---------- */
+vec3 sceneGodhead(vec2 p0,float pr){
+  float t=uTime;
+  vec3 CY=vec3(.25,.95,1.);
+  vec3 MG=vec3(1.,.22,.62);
+  vec2 c=vec2(0.,.19);
+  float z=1.+pr*.32;
+  vec2 p=(p0-c)/z+c; float aa=AA/z;
+  float ig=smoothstep(.34,.48,pr);
+  float burst=exp(-pow((pr-.47)*12.,2.));
+  vec3 col=mix(vec3(.20,.06,.30),vec3(.02,.025,.10),smoothstep(-.15,.55,p.y));
+  float nb=fbm(p*2.6+vec2(t*.008,0.));
+  col+=mix(MG,CY,fbm3(p*3.+2.))*pow(nb,3.)*.5;
+  col+=vec3(.85,.9,1.)*stars(p,100.,.9)*.6;
+  vec2 hq=p-vec2(0.,.18);
+  float hl=length(hq),ha=atan(hq.y,hq.x);
+  float reveal=step(fract((-ha+PI*.5)/TAU),smoothstep(.08,.70,pr));
+  float seg=step(.18,fract(ha*40./TAU+t*.01));
+  float hr=abs(hl-.26);
+  col+=MG*(exp(-hr*320.)*1.3+exp(-hr*28.)*.14)*seg*reveal;
+  col+=CY*exp(-abs(hl-.285)*600.)*.5*ig*step(.5,fract(ha*90./TAU-t*.02));
+  vec2 fq=p-vec2(0.,.17);
+  {
+    float sx=abs(fq.x)+sin(fq.y*5.+t*.6)*.018+sin(fq.y*13.-t*.9)*.006;
+    float band=smoothstep(.27,.20,sx)*smoothstep(.10,.15,sx)*smoothstep(.20,.05,fq.y)*smoothstep(-.72,-.30,fq.y);
+    float str=.6+.4*sin(sx*260.+fbm3(vec2(sx*30.,fq.y*4.))*6.);
+    vec3 vc=vec3(.05,.06,.14)*str+CY*.18*pow(str,6.)*(.3+ig);
+    col=mix(col,vc,band*.92);
+  }
+  vec2 fr=vec2(.165,.215);
+  {
+    float ax=fq.x/fr.x;
+    if(abs(ax)<.92){
+      float ytop=fr.y*sqrt(1.-ax*ax);
+      float bw=.016;
+      float bi=floor(fq.x/bw);
+      float bh=h11(bi*1.37+5.);
+      float th=(.02+bh*bh*.11)*(1.-abs(ax)*.85);
+      float y1=ytop+th;
+      float cxl=abs(fract(fq.x/bw)-.5);
+      float halfw=.24*(1.-.8*smoothstep(y1-.025,y1,fq.y));
+      if(bh>.3&&fq.y>ytop-.02&&fq.y<y1&&cxl<halfw){
+        vec2 wi=vec2(bi,floor(fq.y/.007));
+        col=vec3(.06,.05,.13)+mix(CY,MG,step(.5,h21(wi+2.)))*step(.82,h21(wi))*.6;
+        col+=mix(CY,MG,step(.5,bh))*.25*smoothstep(halfw-.06,halfw,cxl);
+      }
+      if(bh>.72)col+=mix(CY,MG,step(.86,bh))*exp(-length(vec2((fract(fq.x/bw)-.5)*bw,fq.y-y1))*420.)*.7;
+    }
+  }
+  vec2 ft=vec2(fq.x/(1.-.20*smoothstep(.04,-.21,fq.y)),fq.y);
+  float fd=sdEll(ft,fr);
+  if(fd<.01){
+    vec2 n2=ft/fr;
+    float nz=sqrt(max(0.,1.-dot(n2,n2)));
+    float ax=abs(fq.x);
+    float sock=exp(-pow(length(vec2(ax-.066,fq.y-.033)*vec2(1.,1.7))*15.,2.));
+    float cheek=exp(-pow(length(vec2(ax-.088,fq.y+.04)*vec2(1.,1.5))*11.,2.));
+    float ridge=exp(-pow(fq.x*85.,2.))*smoothstep(-.075,.0,fq.y)*smoothstep(.08,.03,fq.y);
+    float brow=exp(-pow((fq.y-.072+2.5*(ax-.06)*(ax-.06))*45.,2.))*smoothstep(.15,.08,ax);
+    vec3 N=normalize(vec3(n2.x,n2.y,nz*1.1+.15));
+    float lt=max(dot(N,normalize(vec3(-.25,.55,.80))),0.);
+    float fres=pow(1.-nz,2.4);
+    vec3 por=vec3(.80,.83,.90);
+    vec3 fc=por*(.14+.60*lt);
+    fc*=1.-.50*sock;
+    fc+=por*(.16*cheek+.20*ridge+.10*brow);
+    fc+=MG*fres*smoothstep(.12,-.22,fq.y)*1.1;
+    fc+=CY*fres*smoothstep(-.05,.22,fq.y)*.55;
+    fc+=MG*.10*smoothstep(-.02,-.21,fq.y)*nz;
+    float browY=.074-7.*(ax-.066)*(ax-.066);
+    float s1=ax+max(.075-fq.y,0.)+max(fq.y-.20,0.);
+    float s2=abs(fq.y-browY)+max(abs(ax-.066)-.058,0.);
+    float s3=sdSeg(vec2(ax,fq.y),vec2(.094,.024),vec2(.114,-.095));
+    float s4=sdSeg(vec2(ax,fq.y),vec2(.126,.062),vec2(.152,.125));
+    float s5=abs(length(ft/(fr*.86))-1.)*.16+max(fq.y+.02,0.);
+    float seam=min(min(s1,s2),min(s3,min(s4,s5)));
+    fc*=1.-.30*smoothstep(.003,.0,seam);
+    fc+=CY*(smoothstep(.0032,.0,seam)*(.05+1.2*ig)+exp(-seam*200.)*.22*ig);
+    fc*=1.-.16*exp(-pow(fq.x*70.,2.))*smoothstep(.03,-.01,fq.y)*smoothstep(-.10,-.06,fq.y);
+    fc*=1.-.30*exp(-pow((fq.y+.115)*160.,2.))*smoothstep(.035,.0,ax);
+    vec2 eq=rot(.10)*vec2(abs(fq.x)-.066,fq.y-.035);
+    float L=.034,T=.0085;
+    float er=(L*L/T+T)*.5;
+    float ed=sdVesica(eq.yx,er,er-T);
+    fc=mix(fc,vec3(.02,.02,.05),fill(ed,aa));
+    fc=mix(fc,mix(CY,vec3(1.),.45)*1.6,fill(ed+.0025,aa)*ig);
+    fc*=1.-.25*exp(-max(ed,0.)*90.)*(1.-ig);
+    col=mix(col,fc,fill(fd,aa));
+  }
+  {
+    vec2 eq=vec2(abs(fq.x)-.066,fq.y-.035);
+    float de=length(eq*vec2(1.,2.2));
+    col+=CY*ig*(exp(-de*60.)*.55+exp(-de*14.)*.10);
+    col+=mix(CY,vec3(1.),.3)*ig*exp(-abs(fq.y-.035)*260.)*exp(-abs(fq.x)*4.)*.35;
+    col+=vec3(.8,.97,1.)*burst*exp(-de*8.)*.6;
+  }
+  {
+    float cl=smoothstep(.50,.78,fbm(vec2(p.x*2.3-t*.025-pr*.4,p.y*5.2+1.)))*exp(-pow((p.y+.02)*6.,2.));
+    vec3 cc=mix(vec3(.55,.50,.72),MG*.9+vec3(.15),smoothstep(.04,-.08,p.y))*.85+CY*.15*ig;
+    col=mix(col,cc,cl*.8);
+  }
+  vec2 pc=(p0-vec2(0.,-.5))/(1.+pr*.15)+vec2(0.,-.5);
+  for(int k=0;k<3;k++){
+    float fk=float(k);
+    float bw=.020+fk*.008;
+    float base=-.20-fk*.075;
+    float amp=.05+fk*.05;
+    float xx=pc.x+fk*.37;
+    float bi=floor(xx/bw);
+    float bh=h11(bi*2.3+fk*11.);
+    float top=base+bh*amp+(h11(bi+fk*5.)>.85?.05:0.);
+    float edge=abs(fract(xx/bw)-.5);
+    float spire=step(.85,h11(bi*7.+fk))*step(edge,.06)*step(pc.y,top+.05);
+    if((pc.y<top&&edge<.44)||spire>.5){
+      vec3 bc=mix(vec3(.22,.11,.32),vec3(.025,.02,.06),fk*.5);
+      vec2 cell=vec2(xx/(bw*.25),pc.y/.009);
+      vec2 wi=floor(cell);
+      float wh=h21(wi+fk*9.);
+      vec3 wcol=wh<.55?MG:(wh<.85?CY:vec3(1.,.75,.45));
+      float win=step(.84,h21(wi+3.))*fill(sdBox(fract(cell)-.5,vec2(.22,.26)),.12);
+      bc+=wcol*win*(.6-fk*.12)*step(pc.y,top-.006);
+      bc+=CY*(.15+.45*ig)*smoothstep(top-.008,top,pc.y)*step(spire,.5);
+      col=bc;
+    }
+  }
+  {
+    float w=.045;
+    float yb=-.505;
+    float id0=floor(pc.x/w);float dmin=1e5,hy=0.;
+    for(int j=-1;j<=1;j++){
+      float id=id0+float(j);
+      float hh=h11(id*3.3+.7);
+      float cxh=(id+.5+(hh-.5)*.4)*w;
+      float hcy=yb+w*(.92+hh*.3);
+      float head=sdEll(pc-vec2(cxh,hcy),vec2(w*.22,w*.30));
+      float sh=sdEll(pc-vec2(cxh,yb),vec2(w*.46,w*.5));
+      float dd=smin(head,sh,w*.1);
+      if(dd<dmin){dmin=dd;hy=hcy;}
+    }
+    float f=fill(dmin,AA);
+    col=mix(col,vec3(.01,.01,.03),f);
+    col+=CY*.5*ig*smoothstep(-.005,0.,dmin)*f*smoothstep(hy,hy+w*.2,pc.y);
+  }
+  return col;
+}
+
+vec3 scene(float id,vec2 p,float pr){
+  if(id<.5)return sceneThreshold(p,pr,0.);
+  if(id<1.5)return sceneMasks(p,pr);
+  if(id<2.5)return sceneValley(p,pr);
+  if(id<3.5)return scenePilgrimage(p,pr);
+  if(id<4.5)return sceneHollow(p,pr);
+  if(id<5.5)return sceneGodhead(p,pr);
+  return sceneThreshold(p,pr,1.);
+}
+
+void main(){
+  vec2 uv=gl_FragCoord.xy/uRes;
+  vec2 p=(gl_FragCoord.xy-.5*uRes)/uRes.y;
+  AA=1.3/uRes.y;
+  vec3 col=scene(uA,p,uPA);
+  if(uMix>.002){col=mix(col,scene(uB,p,uPB),uMix);}
+  col+=uFlashCol*uFlash*.5;
+  col=max(col,0.);
+  col=1.-exp(-col*1.3);
+  vec2 v=(uv-.5)*vec2(.9,1.1);
+  col*=1.-dot(v,v)*.9;
+  col+=(h21(gl_FragCoord.xy+fract(uTime*3.17)*113.)-.5)*.03;
+  gl_FragColor=vec4(col,1.);
+}
+</script>
+
+<script>
+(() => {
+  "use strict";
+
+  /* =====================================================================
+     YOUR WORLDS. Edit titles, captions and scale here.
+     media: a still (.jpg .png .webp) or a clip (.mp4 .webm), as a path
+     next to this file, e.g. "worlds/godhead.jpg". Leave it empty to keep
+     the live-rendered world. Clips play muted and looped.
+     ===================================================================== */
+  const WORLDS = [
+    { slug: "crimson-masks",    title: "Crimson Masks",    caption: "Every mask is turned toward the same light.", scale: 3,     glow: "#9FE6FF", media: "" },
+    { slug: "colossus-valley",  title: "Colossus Valley",  caption: "Out here, the mountains walk.",               scale: 250,   glow: "#FF9A4A", media: "" },
+    { slug: "the-pilgrimage",   title: "The Pilgrimage",   caption: "A pilgrimage from a thousand suns.",          scale: 1400,  glow: "#E4BE4C", media: "" },
+    { slug: "the-hollow-world", title: "The Hollow World", caption: "The horizon curves up and keeps going.",      scale: 6000,  glow: "#FF63DA", media: "" },
+    { slug: "godhead",          title: "Godhead",          caption: "It opens its eyes when you arrive.",          scale: 20000, glow: "#45F1FF", media: "" },
+  ];
+  const THRESHOLD_GLOW = "#B9C8FF";
+  /* one chord per scene: threshold, five worlds, outro (Hz, kept above phone-speaker cutoff) */
+  const CHORDS = [
+    [146.83, 220.00, 329.63, 440.00],
+    [174.61, 261.63, 392.00, 415.30],
+    [130.81, 196.00, 293.66, 349.23],
+    [116.54, 174.61, 293.66, 440.00],
+    [164.81, 246.94, 369.99, 415.30],
+    [220.00, 329.63, 493.88, 554.37],
+    [146.83, 220.00, 329.63, 440.00],
+  ];
+  const ROMAN = ["I", "II", "III", "IV", "V"];
+
+  const root = document.documentElement;
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const $ = (id) => document.getElementById(id);
+  const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+  const ss = (a, b, x) => { const t = clamp((x - a) / (b - a)); return t * t * (3 - 2 * t); };
+  const rgb = (h) => { const n = parseInt(h.slice(1), 16); return [(n >> 16 & 255) / 255, (n >> 8 & 255) / 255, (n & 255) / 255]; };
+  const glowOf = (w) => (w >= 1 && w <= 5 ? WORLDS[w - 1].glow : THRESHOLD_GLOW);
+
+  root.classList.add("locked");
+  if ("scrollRestoration" in history) history.scrollRestoration = "manual";
+  window.scrollTo(0, 0);
+
+  /* ---------- build the five world chapters ---------- */
+  const outro = $("new-worlds");
+  const ticks = $("ticks");
+  WORLDS.forEach((w, i) => {
+    const s = document.createElement("section");
+    s.className = "chapter world";
+    s.id = w.slug;
+    s.dataset.world = String(i + 1);
+    s.style.setProperty("--glow", w.glow);
+    s.setAttribute("aria-label", w.title);
+    const stage = document.createElement("div"); stage.className = "stage";
+    const card = document.createElement("div"); card.className = "card";
+    const num = document.createElement("p"); num.className = "num"; num.textContent = ROMAN[i];
+    const h = document.createElement("h2"); h.className = "title"; h.textContent = w.title;
+    const cap = document.createElement("p"); cap.className = "caption"; cap.textContent = w.caption;
+    const sc = document.createElement("p"); sc.className = "scale"; sc.textContent = "Scale 1 : " + Number(w.scale).toLocaleString("en-GB");
+    card.append(num, h, cap, sc); stage.append(card); s.append(stage);
+    outro.before(s);
+
+    const b = document.createElement("button");
+    b.type = "button"; b.className = "tick"; b.textContent = ROMAN[i];
+    b.setAttribute("aria-label", w.title); b.dataset.slug = w.slug;
+    b.style.setProperty("--glow", w.glow);
+    b.addEventListener("click", () => jumpTo(w.slug));
+    ticks.append(b);
+  });
+  const tickEls = [...ticks.children];
+
+  /* ---------- your stills and clips ---------- */
+  const mediaLayer = $("media");
+  WORLDS.forEach((w) => {
+    if (!w.media) return;
+    const isVid = /\.(mp4|webm|mov|m4v)(\?|$)/i.test(w.media);
+    const el = document.createElement(isVid ? "video" : "img");
+    el.className = "media";
+    if (isVid) { el.muted = true; el.loop = true; el.playsInline = true; el.preload = "auto"; el.setAttribute("muted", ""); el.setAttribute("playsinline", ""); }
+    else { el.alt = ""; el.decoding = "async"; }
+    el.src = w.media;
+    mediaLayer.append(el);
+    w.el = el; w.isVid = isVid;
+  });
+
+  /* ---------- WebGL ---------- */
+  const canvas = $("world");
+  let gl = null, U = {};
+  try { gl = canvas.getContext("webgl", { antialias: false, alpha: false, depth: false, stencil: false, powerPreference: "high-performance" }); } catch (e) { gl = null; }
+  if (gl) {
+    let src = $("fs").textContent;
+    const hp = gl.getShaderPrecisionFormat(gl.FRAGMENT_SHADER, gl.HIGH_FLOAT);
+    if (!hp || hp.precision === 0) src = src.replace("precision highp float;", "precision mediump float;");
+    const mk = (type, code) => { const s = gl.createShader(type); gl.shaderSource(s, code); gl.compileShader(s); if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) { console.error(gl.getShaderInfoLog(s)); return null; } return s; };
+    const vs = mk(gl.VERTEX_SHADER, "attribute vec2 a;void main(){gl_Position=vec4(a,0.,1.);}");
+    const fs = mk(gl.FRAGMENT_SHADER, src);
+    let prog = null;
+    if (vs && fs) {
+      prog = gl.createProgram(); gl.attachShader(prog, vs); gl.attachShader(prog, fs); gl.linkProgram(prog);
+      if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) { console.error(gl.getProgramInfoLog(prog)); prog = null; }
+    }
+    if (prog) {
+      gl.useProgram(prog);
+      gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
+      gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
+      const loc = gl.getAttribLocation(prog, "a");
+      gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
+      ["uRes", "uTime", "uA", "uB", "uMix", "uPA", "uPB", "uBoot", "uFlash", "uFlashCol", "uMotion"].forEach((n) => (U[n] = gl.getUniformLocation(prog, n)));
+    } else gl = null;
+  }
+  if (!gl) root.classList.add("no-gl");
+  canvas.addEventListener("webglcontextlost", (e) => { e.preventDefault(); gl = null; root.classList.add("no-gl"); });
+
+  /* ---------- layout ---------- */
+  let quality = 1, vh = innerHeight, secs = [];
+  function measure() {
+    vh = innerHeight;
+    secs = [...document.querySelectorAll(".chapter")].map((el) => ({
+      el, w: +el.dataset.world, card: el.querySelector(".card"), cue: el.querySelector(".cue"),
+      top: el.getBoundingClientRect().top + window.scrollY, h: el.offsetHeight, o: -1,
+    }));
+  }
+  function resize() {
+    if (gl) {
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const W = innerWidth, H = innerHeight;
+      const s = Math.min(dpr, Math.sqrt((7.5e5 * quality) / (W * H)));
+      canvas.width = Math.max(2, Math.round(W * s));
+      canvas.height = Math.max(2, Math.round(H * s));
+      gl.viewport(0, 0, canvas.width, canvas.height);
+    }
+    measure();
+  }
+  addEventListener("resize", resize);
+  resize();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(measure);
+
+  function jumpTo(slug) {
+    const s = secs.find((x) => x.el.id === slug);
+    if (!s) return;
+    window.scrollTo(0, s.top + Math.max(1, s.h - vh) * 0.3);
+  }
+
+  /* ---------- generated sound ---------- */
+  const Sound = {
+    ctx: null, on: false, chord: 0,
+    init() {
+      const AC = window.AudioContext || window.webkitAudioContext;
+      if (!AC) return false;
+      const ctx = (this.ctx = new AC());
+      const master = (this.master = ctx.createGain()); master.gain.value = 0;
+      const hpf = ctx.createBiquadFilter(); hpf.type = "highpass"; hpf.frequency.value = 95;
+      const comp = ctx.createDynamicsCompressor(); comp.threshold.value = -20; comp.ratio.value = 3;
+      master.connect(hpf); hpf.connect(comp); comp.connect(ctx.destination);
+      const lp = ctx.createBiquadFilter(); lp.type = "lowpass"; lp.frequency.value = 950; lp.Q.value = 0.6;
+      const lfo = ctx.createOscillator(); lfo.frequency.value = 0.045;
+      const lfoG = ctx.createGain(); lfoG.gain.value = 380; lfo.connect(lfoG); lfoG.connect(lp.frequency); lfo.start();
+      const pad = ctx.createGain(); pad.gain.value = 0.09; lp.connect(pad); pad.connect(master);
+      this.voices = [];
+      for (let i = 0; i < 4; i++) {
+        const g = ctx.createGain(); g.gain.value = i === 0 ? 0.32 : 0.24; g.connect(lp);
+        this.voices.push([-7, 7].map((cents) => { const o = ctx.createOscillator(); o.type = i === 0 ? "triangle" : "sawtooth"; o.detune.value = cents; o.connect(g); o.start(); return o; }));
+      }
+      const len = ctx.sampleRate * 2, buf = ctx.createBuffer(1, len, ctx.sampleRate), data = buf.getChannelData(0);
+      for (let i = 0; i < len; i++) data[i] = Math.random() * 2 - 1;
+      const ns = ctx.createBufferSource(); ns.buffer = buf; ns.loop = true;
+      const bp = ctx.createBiquadFilter(); bp.type = "bandpass"; bp.frequency.value = 900; bp.Q.value = 0.7;
+      const nl = ctx.createOscillator(); nl.frequency.value = 0.07; const nlg = ctx.createGain(); nlg.gain.value = 500; nl.connect(nlg); nlg.connect(bp.frequency); nl.start();
+      const ng = ctx.createGain(); ng.gain.value = 0.03; ns.connect(bp); bp.connect(ng); ng.connect(master); ns.start();
+      const dl = ctx.createDelay(1.5); dl.delayTime.value = 0.43;
+      const fb = ctx.createGain(); fb.gain.value = 0.42;
+      const dlp = ctx.createBiquadFilter(); dlp.type = "lowpass"; dlp.frequency.value = 2600;
+      dl.connect(dlp); dlp.connect(fb); fb.connect(dl); dlp.connect(master);
+      this.bells = ctx.createGain(); this.bells.connect(master); this.bells.connect(dl);
+      this.setChord(this.chord, true);
+      this.loop();
+      return true;
+    },
+    setChord(i, instant) {
+      this.chord = i;
+      if (!this.ctx) return;
+      const f = CHORDS[i], now = this.ctx.currentTime;
+      this.voices.forEach((pair, k) => pair.forEach((o) => { if (instant) o.frequency.setValueAtTime(f[k], now); else o.frequency.setTargetAtTime(f[k], now, 0.9); }));
+    },
+    loop() {
+      setTimeout(() => { if (this.on && this.ctx.state === "running") this.bell(); this.loop(); }, 1800 + Math.random() * 2800);
+    },
+    bell() {
+      const ctx = this.ctx, now = ctx.currentTime, f = CHORDS[this.chord];
+      const base = f[1 + Math.floor(Math.random() * 3)] * (Math.random() < 0.5 ? 2 : 4);
+      [[1, 0.05], [2.76, 0.012]].forEach(([m, a]) => {
+        const o = ctx.createOscillator(); o.type = "sine"; o.frequency.value = base * m;
+        const g = ctx.createGain(); g.gain.setValueAtTime(0, now); g.gain.linearRampToValueAtTime(a, now + 0.012); g.gain.exponentialRampToValueAtTime(0.0001, now + 3.2 / m);
+        o.connect(g); g.connect(this.bells); o.start(now); o.stop(now + 3.4);
+      });
+    },
+    async set(v) {
+      if (v && !this.ctx && !this.init()) return false;
+      if (!this.ctx) return false;
+      this.on = v;
+      const now = this.ctx.currentTime;
+      this.master.gain.cancelScheduledValues(now);
+      if (v) { try { await this.ctx.resume(); } catch (e) {} this.master.gain.setTargetAtTime(0.55, now, 1.2); }
+      else this.master.gain.setTargetAtTime(0, now, 0.35);
+      return true;
+    },
+  };
+  const soundBtn = $("soundBtn"), soundLabel = $("soundLabel");
+  function setSound(v) {
+    Sound.set(v);
+    soundBtn.setAttribute("aria-pressed", String(v));
+    soundLabel.textContent = v ? "Sound on" : "Sound off";
+  }
+  soundBtn.addEventListener("click", () => setSound(!Sound.on));
+
+  /* ---------- entering ---------- */
+  const boot = $("boot"), hud = $("hud");
+  let entered = false, bootTarget = 0.18, bootVal = 0.18;
+  function enter(withSound) {
+    if (entered) return;
+    entered = true;
+    if (withSound) setSound(true);
+    bootTarget = 1;
+    boot.classList.add("out");
+    root.classList.remove("locked");
+    setTimeout(() => { boot.hidden = true; }, reduce ? 0 : 1000);
+    hud.hidden = false; ticks.hidden = false;
+    requestAnimationFrame(() => { hud.classList.add("show"); ticks.classList.add("show"); });
+    measure();
+    const slug = decodeURIComponent(location.hash.slice(1));
+    if (slug && secs.some((s) => s.el.id === slug)) { jumpTo(slug); smoothY = window.scrollY; }
+    $("toTop").focus({ preventScroll: true });
+  }
+  $("enterSound").addEventListener("click", () => enter(true));
+  $("enterQuiet").addEventListener("click", () => enter(false));
+  $("toTop").addEventListener("click", () => window.scrollTo(0, 0));
+  $("again").addEventListener("click", () => window.scrollTo(0, 0));
+
+  /* ---------- frame loop ---------- */
+  let last = performance.now(), time = 0, smoothY = window.scrollY, raf = 0;
+  let dom = -1, acc = 0, frames = 0;
+  function frame(now) {
+    const dt = Math.min(0.05, (now - last) / 1000); last = now;
+    time += dt * (reduce ? 0.25 : 1);
+    smoothY += (window.scrollY - smoothY) * (reduce ? 1 : 1 - Math.pow(1 - 0.085, dt * 60));
+    bootVal += (bootTarget - bootVal) * (1 - Math.pow(1 - 0.035, dt * 60));
+
+    let idx = 0;
+    for (let i = 0; i < secs.length; i++) if (smoothY >= secs[i].top - 1) idx = i;
+    const S = secs[idx] || { w: 0, top: 0, h: vh * 2 };
+    const t = clamp((smoothY - S.top) / Math.max(1, S.h - vh));
+    const A = S.w; let B = A, mix = 0;
+    if (idx < secs.length - 1 && t > 0.86) { mix = ss(0.86, 1, t); B = secs[idx + 1].w; }
+
+    for (const s of secs) {
+      const tt = (smoothY - s.top) / Math.max(1, s.h - vh);
+      let o;
+      if (s.w === 0) o = 1 - ss(0.22, 0.5, tt);
+      else if (s.w === 6) o = ss(0.12, 0.4, tt);
+      else o = ss(0.05, 0.17, tt) * (1 - ss(0.70, 0.82, tt));
+      if (Math.abs(o - s.o) > 0.004) {
+        s.o = o;
+        s.card.style.opacity = o.toFixed(3);
+        s.card.style.transform = "translate3d(0," + ((1 - o) * 14).toFixed(1) + "px,0)";
+        s.card.style.visibility = o < 0.01 ? "hidden" : "visible";
+        if (s.cue) s.cue.style.opacity = entered ? (o * o).toFixed(3) : "0";
+      }
+    }
+
+    const d = mix > 0.5 ? B : A;
+    if (d !== dom) {
+      dom = d;
+      root.style.setProperty("--glow", glowOf(d));
+      tickEls.forEach((b, i) => b.classList.toggle("on", i + 1 === d));
+      Sound.setChord(d);
+    }
+
+    let covered = false;
+    WORLDS.forEach((w, i) => {
+      if (!w.el) return;
+      const id = i + 1;
+      let wt = 0, pr = 0;
+      if (A === id) { wt += 1 - mix; pr = t; }
+      if (B === id && mix > 0) { wt += mix; pr = 0; }
+      w.el.style.opacity = wt.toFixed(3);
+      w.el.style.transform = "scale(" + (1.04 + pr * 0.1).toFixed(4) + ")";
+      if (w.isVid) { if (wt > 0 && w.el.paused) w.el.play().catch(() => {}); else if (wt === 0 && !w.el.paused) w.el.pause(); }
+      if (wt >= 0.999) covered = true;
+    });
+
+    if (gl && !covered) {
+      const flash = Math.pow(Math.sin(mix * Math.PI), 2) * 0.85;
+      const fc = rgb(glowOf(B));
+      gl.uniform2f(U.uRes, canvas.width, canvas.height);
+      gl.uniform1f(U.uTime, time);
+      gl.uniform1f(U.uA, A); gl.uniform1f(U.uB, B); gl.uniform1f(U.uMix, mix);
+      gl.uniform1f(U.uPA, t); gl.uniform1f(U.uPB, 0);
+      gl.uniform1f(U.uBoot, bootVal);
+      gl.uniform1f(U.uFlash, flash); gl.uniform3f(U.uFlashCol, fc[0], fc[1], fc[2]);
+      gl.uniform1f(U.uMotion, reduce ? 0 : 1);
+      gl.drawArrays(gl.TRIANGLES, 0, 3);
+
+      acc += dt; frames++;
+      if (frames >= 45) {
+        const avg = acc / frames; acc = 0; frames = 0;
+        if (avg > 0.026 && quality > 0.4) { quality *= 0.82; resize(); }
+        else if (avg < 0.0175 && quality < 1) { quality = Math.min(1, quality * 1.1); resize(); }
+      }
+    }
+    raf = requestAnimationFrame(frame);
+  }
+  raf = requestAnimationFrame(frame);
+
+  document.addEventListener("visibilitychange", () => {
+    if (document.hidden) { cancelAnimationFrame(raf); if (Sound.ctx) Sound.ctx.suspend(); }
+    else { last = performance.now(); raf = requestAnimationFrame(frame); if (Sound.ctx && Sound.on) Sound.ctx.resume(); }
+  });
+})();
+</script>
+
+</body></html>
